@@ -13,14 +13,14 @@ Shader "OneLine/StarSDF"
         [Header(Shape)]
         _Points ("Points", Range(3, 8)) = 5
         _InnerRatio ("Inner / outer radius", Range(0.2, 0.7)) = 0.4
-        _TipRound ("Tip roundness", Range(0, 0.25)) = 0.05
-        _EdgeCurve ("Edge concavity", Range(0, 0.25)) = 0.07
+        _TipRound ("Tip roundness", Range(0, 0.25)) = 0.035
+        _EdgeCurve ("Edge concavity", Range(0, 0.25)) = 0.12
 
         [Header(Light)]
         _CoreColor ("Core color", Color) = (1, 0.98, 0.92, 1)
         _TipColor ("Tip color", Color) = (1, 0.76, 0.34, 1)
         _CoreSize ("Core size", Range(0.05, 1)) = 0.38
-        _Falloff ("Core to tip falloff", Range(0.3, 4)) = 1.3
+        _Falloff ("Core to tip falloff", Range(0.3, 4)) = 2.2
         _CoreBoost ("Core boost", Range(0, 1)) = 0.25
         _RimColor ("Rim color", Color) = (1, 0.93, 0.72, 1)
         _RimWidth ("Rim width", Range(0.005, 0.3)) = 0.07
@@ -123,7 +123,8 @@ Shader "OneLine/StarSDF"
                 a -= 2.0 * an * round(a / (2.0 * an));
                 float2 f = length(q) * float2(cos(a), abs(sin(a)));
 
-                float2 v = _InnerRatio * float2(cos(an), sin(an));
+                // Rounding dilates the whole shape; pull the valley in too so the arms stay slim.
+                float2 v = max(_InnerRatio - _TipRound, 0.05) * float2(cos(an), sin(an));
                 // Pull the tip in so the rounded tip still reaches radius 1.
                 float tipHalf = atan2(v.y, 1.0 - v.x);
                 float2 t = float2(1.0 - _TipRound / max(sin(tipHalf), 0.05), 0.0);
@@ -134,21 +135,24 @@ Shader "OneLine/StarSDF"
                 float2 nOut = float2(dir.y, -dir.x); // away from the center
                 float s = dot(f - t, dir) / len;     // 0 at the tip, 1 at the valley
 
-                float d;
-                if (_EdgeCurve < 0.002)
-                {
-                    d = dot(f - t, nOut); // straight edge
-                }
-                else
+                // Inside = inside the straight-edged star AND outside the circle that carves the concave edge.
+                float2 closest = t + e * saturate(s); // nearest point on the straight edge
+                float dist = length(f - closest);
+                bool inside = dot(f - t, nOut) < 0.0;
+                if (_EdgeCurve >= 0.002)
                 {
                     // Concave edge: circular arc bowing inward by edgeCurve * chord length.
                     float h = _EdgeCurve * len;
                     float rad = (len * len * 0.25 + h * h) / (2.0 * h);
                     float2 c = (t + v) * 0.5 + nOut * (rad - h);
-                    d = rad - length(f - c);
+                    float fromC = length(f - c);
+                    inside = inside && fromC > rad;
+                    // Nearest point on the circle; if it's on the arc (inner side of the chord), that's the distance,
+                    // otherwise the nearest arc end.
+                    float2 onCircle = c + (f - c) * (rad / max(fromC, 1e-5));
+                    dist = dot(onCircle - t, nOut) <= 0.0 ? abs(fromC - rad) : min(length(f - t), length(f - v));
                 }
-                if (s < 0.0) d = length(f - t);                  // past the tip: round cap
-                else if (s > 1.0) d = sign(d) * length(f - v);   // past the valley
+                float d = inside ? -dist : dist;
                 return d - _TipRound;
             }
 
@@ -190,7 +194,7 @@ Shader "OneLine/StarSDF"
                 float2 hp = p - float2(0.0, hop * 0.5);
                 float glowLevel = _GlowIntensity * (1.0 + _BreatheGlow * breathe + flash);
                 float halo = glowLevel * (0.6 * exp(-dot(hp, hp) / (_GlowRadius * _GlowRadius))
-                                        + 0.4 * exp(-max(d, 0.0) / (_GlowRadius * 0.35)));
+                                        + 0.4 * exp(-max(d, 0.0) / (_GlowRadius * 0.2)));
                 half3 glowColor = lerp(_GlowColor.rgb, tint.rgb, tintAmount);
 
                 // Glint: thin 4-point cross flare with a bright center.

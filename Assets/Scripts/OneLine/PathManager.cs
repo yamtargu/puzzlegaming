@@ -176,6 +176,7 @@ namespace OneLine
 
             int levelSeed = StarStyle.Seed(level.name); // star personalities: same every time this level is played
             float heroScale = style ? style.heroScale : 1.25f;
+            int hero = HeroStar(level);
             for (int i = 0; i < level.nodes.Length; i++)
             {
                 var go = new GameObject($"Node {i}", typeof(SpriteRenderer));
@@ -183,8 +184,8 @@ namespace OneLine
                 go.transform.localPosition = (level.nodes[i] - center) * spacing;
                 var node = go.AddComponent<Node>();
                 bool isStart = i == level.startNode;
-                node.Init(i, isStart ? nodeSize * heroScale : nodeSize,
-                    isStart ? startNodeColor : IdleNodeColor, 20, style, isStart, levelSeed + i * 7919);
+                node.Init(i, i == hero ? nodeSize * heroScale : nodeSize,
+                    isStart ? startNodeColor : IdleNodeColor, 20, style, i == hero, levelSeed + i * 7919);
                 nodes.Add(node);
             }
 
@@ -350,6 +351,17 @@ namespace OneLine
                     bestDepth = p.z;
                 }
             }
+            return best;
+        }
+
+        // The constellation's main star (visual only): the start star, or on free-start levels the best-connected one.
+        static int HeroStar(LevelData level)
+        {
+            if (level.startNode >= 0) return level.startNode;
+            var degree = new int[level.nodes.Length];
+            foreach (var e in level.edges) { degree[e.a]++; degree[e.b]++; }
+            int best = 0;
+            for (int i = 1; i < degree.Length; i++) if (degree[i] > degree[best]) best = i;
             return best;
         }
 

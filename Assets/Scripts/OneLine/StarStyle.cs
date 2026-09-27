@@ -45,11 +45,11 @@ namespace OneLine
         [Header("Star look (SDF shader)")]
         [Tooltip("OneLine/StarSDF. Without it (or on hardware that can't run it) stars fall back to the flat Art.Star sprite.")]
         public Shader starShader;
-        [Tooltip("The start star: slightly bigger and warmer, with a stronger glint.")]
+        [Tooltip("The constellation's main star (the start star, or the best-connected one on free-start levels): slightly bigger and warmer, with a stronger glint.")]
         public StarLook heroLook = StarLook.Hero();
         [Tooltip("Every other star: simpler and smaller.")]
         public StarLook minorLook = StarLook.Minor();
-        [Tooltip("Start star size, in node sizes.")]
+        [Tooltip("Main star size, in node sizes.")]
         public float heroScale = 1.25f;
         [Tooltip("How much an idle star's tips take on its idle color (0 = pure gold).")]
         [Range(0f, 1f)] public float idleTint = 0.15f;
@@ -179,20 +179,20 @@ namespace OneLine
         [Range(3, 8)] public int points = 5;
         [Tooltip("Inner / outer radius: lower = slimmer, sharper arms.")]
         [Range(0.2f, 0.7f)] public float innerRatio = 0.4f;
-        [Range(0f, 0.25f)] public float tipRoundness = 0.05f;
+        [Range(0f, 0.25f)] public float tipRoundness = 0.035f;
         [Tooltip("How much the edges between tips curve inward.")]
-        [Range(0f, 0.25f)] public float edgeCurvature = 0.07f;
+        [Range(0f, 0.25f)] public float edgeCurvature = 0.12f;
 
         [Header("Light")]
         public Color coreColor = new(1f, 0.98f, 0.92f);
         public Color tipColor = new(1f, 0.76f, 0.34f);
-        [Range(0.05f, 1f)] public float coreSize = 0.38f;
+        [Range(0.05f, 1f)] public float coreSize = 0.3f;
         [Tooltip("How fast the white core gives way to the tip color.")]
-        [Range(0.3f, 4f)] public float falloff = 1.3f;
-        [Range(0f, 1f)] public float coreBoost = 0.25f;
-        public Color rimColor = new(1f, 0.93f, 0.72f);
+        [Range(0.3f, 4f)] public float falloff = 2.2f;
+        [Range(0f, 1f)] public float coreBoost = 0.2f;
+        public Color rimColor = new(1f, 0.86f, 0.55f);
         [Range(0.005f, 0.3f)] public float rimWidth = 0.07f;
-        [Range(0f, 2f)] public float rimIntensity = 0.7f;
+        [Range(0f, 2f)] public float rimIntensity = 0.6f;
 
         [Header("Glow")]
         public Color glowColor = new(1f, 0.8f, 0.45f);
@@ -217,10 +217,10 @@ namespace OneLine
         {
             tipColor = new Color(1f, 0.70f, 0.26f),
             glowColor = new Color(1f, 0.74f, 0.36f),
-            coreBoost = 0.35f,
-            glowRadius = 1.4f,
-            glowIntensity = 0.55f,
-            rimIntensity = 0.85f,
+            coreBoost = 0.3f,
+            glowRadius = 1.35f,
+            glowIntensity = 0.5f,
+            rimIntensity = 0.75f,
             glintIntensity = 1.5f,
             glintLength = 2.7f,
         };
@@ -228,9 +228,10 @@ namespace OneLine
         public static StarLook Minor() => new()
         {
             innerRatio = 0.42f,
-            rimIntensity = 0.45f,
-            glowRadius = 1.05f,
-            glowIntensity = 0.3f,
+            edgeCurvature = 0.1f,
+            rimIntensity = 0.4f,
+            glowRadius = 0.95f,
+            glowIntensity = 0.26f,
             breatheGlow = 0.4f,
             glintIntensity = 0.9f,
             glintLength = 2.1f,
