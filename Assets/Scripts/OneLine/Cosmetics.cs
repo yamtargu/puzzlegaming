@@ -4,7 +4,7 @@ namespace OneLine
 {
     /// <summary>
     /// Which cosmetics the player owns and has equipped (saved by SaveService).
-    /// Buying spends coins; equipping only changes which colors the board is drawn with. Exclusive items can't be
+    /// Buying spends coins; equipping only changes how the board and the drawn line look. Exclusive items can't be
     /// bought with coins — they come with the Celestial Pass (Entitlements).
     /// </summary>
     public static class Cosmetics
@@ -14,12 +14,13 @@ namespace OneLine
 
         public static string EquippedSkinId => SaveService.EquippedSkin;
         public static string EquippedBackgroundId => SaveService.EquippedBackground;
+        public static string EquippedWandId => SaveService.EquippedWand;
 
         public static bool IsOwned(CosmeticCatalog.Item item) =>
             (!item.exclusive && item.price <= 0) || SaveService.IsOwned(item.id);
 
         public static bool IsEquipped(CosmeticCatalog.Item item) =>
-            (item is CosmeticCatalog.LineSkin ? EquippedSkinId : EquippedBackgroundId) == item.id;
+            (item is CosmeticCatalog.LineSkin ? EquippedSkinId : item is CosmeticCatalog.Wand ? EquippedWandId : EquippedBackgroundId) == item.id;
 
         /// <summary>Buys the item if the player can afford it. Returns true if it is owned afterwards.</summary>
         public static bool TryBuy(CosmeticCatalog.Item item)
@@ -38,11 +39,12 @@ namespace OneLine
             Changed?.Invoke();
         }
 
-        /// <summary>Equips an owned item in its slot (line skin or background). Returns false if not owned.</summary>
+        /// <summary>Equips an owned item in its slot (line skin, background or wand). Returns false if not owned.</summary>
         public static bool Equip(CosmeticCatalog.Item item)
         {
             if (!IsOwned(item)) return false;
             if (item is CosmeticCatalog.LineSkin) SaveService.EquippedSkin = item.id;
+            else if (item is CosmeticCatalog.Wand) SaveService.EquippedWand = item.id;
             else SaveService.EquippedBackground = item.id;
             SaveService.Save();
             Changed?.Invoke();
@@ -54,6 +56,7 @@ namespace OneLine
         {
             foreach (var item in catalog.lineSkins) SaveService.SetOwned(item.id, false);
             foreach (var item in catalog.backgrounds) SaveService.SetOwned(item.id, false);
+            foreach (var item in catalog.wands) SaveService.SetOwned(item.id, false);
             SaveService.ClearEquipped();
             SaveService.Save();
             Changed?.Invoke();

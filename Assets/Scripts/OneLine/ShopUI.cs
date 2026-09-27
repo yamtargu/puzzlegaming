@@ -7,7 +7,7 @@ namespace OneLine
 {
     /// <summary>
     /// Shop in the celestial frame (opened from the home screen and the HUD coin counter): a "Boosts" section (the two
-    /// time boosts in packs of 1 and 5 — the only purchases that affect gameplay) and the cosmetics.
+    /// time boosts in packs of 1 and 5 — the only purchases that affect gameplay) and the cosmetics (line & stars, sky, wands).
     /// It only talks to CoinManager, Boosts and Cosmetics — never to PathManager or any gameplay code. Exclusive items
     /// come with the Celestial Pass, so their button opens the pass instead of spending coins.
     /// </summary>
@@ -142,9 +142,12 @@ namespace OneLine
         }
 
         // With nothing equipped yet, the default (first) item of each list counts as equipped.
-        bool IsShownAsEquipped(CosmeticCatalog.Item item) => item is CosmeticCatalog.LineSkin
-            ? catalog.EquippedSkin() == item
-            : catalog.EquippedBackground() == item;
+        bool IsShownAsEquipped(CosmeticCatalog.Item item) => item switch
+        {
+            CosmeticCatalog.LineSkin => catalog.EquippedSkin() == item,
+            CosmeticCatalog.Wand => catalog.EquippedWand() == item,
+            _ => catalog.EquippedBackground() == item,
+        };
 
         // ---------- building ----------
 
@@ -189,6 +192,7 @@ namespace OneLine
             if (timerSettings) y = BoostSection(content, y) - 20f;
             y = Section(content, "Line & stars", catalog.lineSkins, y);
             y = Section(content, "Sky", catalog.backgrounds, y - 20f);
+            y = Section(content, "Wands", catalog.wands, y - 20f);
             content.sizeDelta = new Vector2(0f, -y);
 
             messageText = UIKit.Text(card, "Message", UIKit.BodyFont(style), 30f, Gold, new Vector2(0.5f, 0f),
@@ -286,6 +290,8 @@ namespace OneLine
             {
                 CosmeticCatalog.LineSkin s => (s.line, s.node),
                 CosmeticCatalog.Background g => (g.background, g.edge),
+                CosmeticCatalog.Wand w => (Color.Lerp(new Color(0.35f, 0.82f, 1f), w.tint, w.tintAmount),
+                                           Color.Lerp(new Color(0.65f, 0.55f, 1f), w.tint, w.tintAmount)),
                 _ => (Color.white, Color.gray),
             };
         }

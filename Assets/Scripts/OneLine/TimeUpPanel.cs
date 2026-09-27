@@ -8,7 +8,8 @@ namespace OneLine
     /// Shown when a timed level runs out of time (after the hourglass cracks), in the celestial frame with Saturn's
     /// glyph in the medallion, worded as a second chance: "Saturn can grant you more time". The gold button uses a
     /// Saturn's Gift (+15 s) — or, with none owned, buys one for coins and uses it at once (the missing amount shows if
-    /// the balance is short); at most 2 per level (TimerSettings). "Try again" restarts the level with a full timer.
+    /// the balance is short); at most 2 per level (TimerSettings). With rewarded ads on, "Watch an ad" gets one for free
+    /// and uses it (RewardedAds, capped per day). "Try again" restarts the level with a full timer.
     /// </summary>
     public class TimeUpPanel : MonoBehaviour
     {
@@ -21,8 +22,11 @@ namespace OneLine
         CanvasGroup giftGroup;
         TextMeshProUGUI giftLabel, ownedText, messageText, secondChance;
         RectTransform sparkle;
+        Button ad;
+        CanvasGroup adGroup;
+        TextMeshProUGUI adLabel;
         Tween showDelay;
-        bool subscribed;
+        bool subscribed, watching;
 
         TimerSettings S => timer ? timer.settings : null;
         public bool IsOpen => group && group.gameObject.activeSelf;
@@ -102,10 +106,46 @@ namespace OneLine
             giftGroup.alpha = capped ? S.boostDisabledAlpha : 1f;
             int left = Mathf.Max(0, S.maxSaturnPerLevel - timer.SaturnUsed);
             ownedText.SetText("You have {0}  ·  {1} left on this level", (float)owned, left);
+            if (!ad) return;
+            bool adsLeft = RewardedAds.LeftToday > 0;
+            if (watching) adLabel.text = "Loading the ad…";
+            else if (adsLeft) adLabel.text = "Watch an ad for Saturn's Gift";
+            else adLabel.text = "No more free ads today";
+            ad.interactable = !capped && adsLeft && !watching;
+            adGroup.alpha = !capped && adsLeft ? 1f : S.boostDisabledAlpha;
+        }
+
+        // Rewarded ad: a free Saturn's Gift, used at once (the timer stays paused while the panel is up).
+        void WatchAd()
+        {
+            if (watching) return;
+            if (timer.SaturnUsed >= S.maxSaturnPerLevel || !RewardedAds.CanWatch)
+            {
+                if (RewardedAds.LeftToday > 0 && timer.SaturnUsed < S.maxSaturnPerLevel)
+                    messageText.text = "No ad available right now — try again soon";
+                UIKit.Wiggle(ad.transform, style);
+                return;
+            }
+            watching = true;
+            messageText.text = "";
+            Refresh();
+            RewardedAds.WatchForBoost(BoostType.SaturnsGift, granted =>
+            {
+                watching = false;
+                if (!this) return;
+                if (!granted)
+                {
+                    messageText.text = "The ad didn't finish — no reward this time";
+                    if (IsOpen) Refresh();
+                    return;
+                }
+                if (!timer.TryExtend() && IsOpen) Refresh(); // the gift stays in the inventory if it can't be used now
+            });
         }
 
         void UseGift()
         {
+            if (watching) return;
             if (timer.SaturnUsed >= S.maxSaturnPerLevel) { UIKit.Wiggle(gift.transform, style); return; }
             if (Boosts.Count(BoostType.SaturnsGift) <= 0 && !Boosts.TryBuy(BoostType.SaturnsGift, 1))
             {
@@ -118,6 +158,7 @@ namespace OneLine
 
         void TryAgain()
         {
+            if (watching) return; // wait for the ad's answer
             Hide(false);
             timer.Restart();
         }
@@ -125,8 +166,12 @@ namespace OneLine
         void Build()
         {
             var s = S;
+            var size = s.panelButtonSize;
+            bool ads = s.rewardedAdsEnabled;
+            // With rewarded ads the card grows by one button row, between the gift and "Try again".
+            float adRow = ads ? size.y + s.panelButtonGap : 0f;
             var canvas = UIKit.MakeCanvas(transform, "Time Up Canvas", 17, true);
-            (group, card) = UIKit.Modal(canvas.transform, "Time Up", style, s.timeUpSize, null);
+            (group, card) = UIKit.Modal(canvas.transform, "Time Up", style, s.timeUpSize + new Vector2(0f, adRow), null);
             var frame = card.GetComponent<Cartouche>();
             frame.SetGlyph(ZodiacGlyphs.Planet(6), style.Zodiac.glyphStroke);
             var top = new Vector2(0.5f, 1f);
@@ -140,7 +185,6 @@ namespace OneLine
             // A drawn sparkle instead of an emoji.
             sparkle = UIKit.Image(card, "Sparkle", UIKit.Sparkle, style.Gold, top, new Vector2(0f, -y + 4f), Vector2.one * 30f).rectTransform;
 
-            var size = s.panelButtonSize;
             float by = y + 130f;
             gift = PanelKit.Button(card, style, "Saturn's Gift", "", top, new Vector2(0f, -by), size, true, UseGift, out giftLabel);
             giftGroup = gift.gameObject.AddComponent<CanvasGroup>();
@@ -151,7 +195,12 @@ namespace OneLine
 
             ownedText = UIKit.Text(card, "Owned", body, 26f, UIKit.WithAlpha(style.text, style.labelAlpha), top,
                 new Vector2(0f, -(by + size.y * 0.5f + 34f)), new Vector2(700f, 40f), 4f, FontStyles.SmallCaps);
-            PanelKit.Button(card, style, "Try Again", "Try again", top, new Vector2(0f, -(by + size.y + 90f)), size, false, TryAgain, out _);
+            if (ads)
+            {
+                ad = PanelKit.Button(card, style, "Watch Ad", "", top, new Vector2(0f, -(by + size.y + 90f)), size, false, WatchAd, out adLabel);
+                adGroup = ad.gameObject.AddComponent<CanvasGroup>();
+            }
+            PanelKit.Button(card, style, "Try Again", "Try again", top, new Vector2(0f, -(by + size.y + 90f + adRow)), size, false, TryAgain, out _);
             messageText = UIKit.Text(card, "Message", body, 28f, s.sandRed, new Vector2(0.5f, 0f), new Vector2(0f, 96f),
                 new Vector2(700f, 44f), 3f);
         }

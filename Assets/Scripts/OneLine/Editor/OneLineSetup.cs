@@ -194,6 +194,7 @@ namespace OneLine.EditorTools
                 Back("bg.plum", "Plum", 100, new Color(0.13f, 0.06f, 0.14f), new Color(0.32f, 0.22f, 0.34f)),
                 Back("bg.ember", "Ember", 120, new Color(0.16f, 0.07f, 0.05f), new Color(0.36f, 0.22f, 0.18f)),
             };
+            catalog.wands = CosmeticCatalog.DefaultWands();
             EditorUtility.SetDirty(catalog);
             AssetDatabase.SaveAssets();
             return catalog;
@@ -286,6 +287,7 @@ namespace OneLine.EditorTools
             pathManager.style = trail.style = feedback.style = parallax.style = starStyle;
             parallax.boardView = boardView;
             var catalog = AssetDatabase.LoadAssetAtPath<CosmeticCatalog>(CatalogPath);
+            trail.cosmetics = catalog;
             pathManager.feedback = feedback;
             levelManager.pathManager = pathManager;
             levelManager.levelPack = pack;

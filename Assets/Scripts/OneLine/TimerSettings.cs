@@ -5,7 +5,7 @@ namespace OneLine
     /// <summary>
     /// Every number of the timed levels in one place: which levels are timed, the time-limit formula (used by the
     /// Editor step One Line/Recalculate Time Limits and as a runtime fallback), star thresholds, the two time boosts
-    /// (effect, limits, starting stock, coin prices) and the look/motion of the hourglass, boost buttons and panels.
+    /// (effect, limits, starting stock, coin prices, rewarded ads) and the look/motion of the hourglass, boost buttons and panels.
     /// </summary>
     [CreateAssetMenu(fileName = "TimerSettings", menuName = "One Line/Timer Settings")]
     public class TimerSettings : ScriptableObject
@@ -56,6 +56,16 @@ namespace OneLine
         public int lunarPrice = 40;
         public int lunarPackPrice = 170;
         public int packSize = 5;
+
+        [Header("Rewarded ads (free boosts)")]
+        [Tooltip("Offer 'Watch an ad' on the boost offer card and the time-up panel.")]
+        public bool rewardedAdsEnabled = true;
+        [Tooltip("Boosts granted per watched ad.")]
+        public int rewardedBoostAmount = 1;
+        [Tooltip("Rewarded ads a player can watch per calendar day (local time).")]
+        public int rewardedAdsPerDay = 5;
+        [Tooltip("Mock ad service only: seconds a fake ad 'plays' before it rewards.")]
+        public float mockAdSeconds = 1.5f;
 
         [Header("Hourglass — layout (reference units)")]
         [Tooltip("Bottom-left, above the Restart button. The drawing is laid out for 130 x 190 and scaled.")]

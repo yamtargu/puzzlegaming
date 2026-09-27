@@ -6,20 +6,33 @@ namespace OneLine
     /// <summary>
     /// "Wand trail" for the drawn path: each new connection draws itself from the previous star to the new
     /// one over ~300 ms as a thin glowing line (color blends from one star to the next), over a soft glow
-    /// in the same color, while a few dust particles drift off the moving tip and fade. Visual only.
+    /// in the same color, while a few dust particles drift off the moving tip and fade. The equipped wand
+    /// (CosmeticCatalog.Wand, bought in the shop) decides how that dust looks and moves. Visual only.
     /// </summary>
     public class WandTrail : MonoBehaviour
     {
         public PathManager pathManager;
         public StarStyle style;
+        [Tooltip("Wands (trail effects). Falls back to the LevelManager's catalog on this GameObject.")]
+        public CosmeticCatalog cosmetics;
+
+        static readonly CosmeticCatalog.Wand DefaultWand = new(); // the original stardust, without a catalog
 
         Transform root;
         ParticleSystem dust;
+        ParticleSystemRenderer dustRenderer;
+        CosmeticCatalog.Wand wand;
         readonly List<GameObject> segments = new();
         readonly List<Tween> tweens = new();
 
+        void Awake()
+        {
+            if (!cosmetics && TryGetComponent(out LevelManager levelManager)) cosmetics = levelManager.cosmetics;
+        }
+
         void OnEnable()
         {
+            Cosmetics.Changed += OnCosmeticsChanged;
             if (!pathManager) return;
             pathManager.NodeVisited += OnNodeVisited;
             pathManager.PathCleared += Clear;
@@ -27,6 +40,7 @@ namespace OneLine
 
         void OnDisable()
         {
+            Cosmetics.Changed -= OnCosmeticsChanged;
             if (!pathManager) return;
             pathManager.NodeVisited -= OnNodeVisited;
             pathManager.PathCleared -= Clear;
@@ -38,6 +52,29 @@ namespace OneLine
             root = new GameObject("WandTrail").transform;
             root.SetParent(pathManager.BoardPivot, false); // tilts with the board
             dust = CreateDust(root);
+            dustRenderer = dust.GetComponent<ParticleSystemRenderer>();
+            ApplyWand();
+        }
+
+        // Equipping a wand in the shop changes the dust from the next connection on.
+        void OnCosmeticsChanged()
+        {
+            if (dust) ApplyWand();
+        }
+
+        void ApplyWand()
+        {
+            wand = (cosmetics ? cosmetics.EquippedWand() : null) ?? DefaultWand;
+            var tsa = dust.textureSheetAnimation;
+            tsa.SetSprite(0, wand.particle switch
+            {
+                CosmeticCatalog.WandParticle.Sparkle => UIKit.Sparkle,
+                CosmeticCatalog.WandParticle.Star => Art.Star,
+                _ => Art.SoftCircle,
+            });
+            dustRenderer.renderMode = wand.stretch > 0f ? ParticleSystemRenderMode.Stretch : ParticleSystemRenderMode.Billboard;
+            dustRenderer.velocityScale = wand.stretch;
+            dustRenderer.lengthScale = 1f;
         }
 
         void OnNodeVisited(Node node, int visitIndex, Color color)
@@ -47,6 +84,8 @@ namespace OneLine
             var from = pathManager.Path[visitIndex - 1];
             Color fromColor = from.CurrentColor;
             Vector3 a = from.BoardPoint, b = node.BoardPoint;
+            Vector3 dir = (b - a).normalized;
+            float dustCount = style.dustPerSegment * wand.amount;
 
             var glow = PathManager.CreateLine("Segment Glow", root, style.trailWidth * style.trailGlowWidth, color, 9);
             glow.sharedMaterial = Art.SoftLineMaterial; // fades out across its width: a soft halo, not a band
@@ -65,8 +104,8 @@ namespace OneLine
                 SetLine(core, a, tip, fromColor, color, alpha);
                 SetLine(glow, a, tip, fromColor, color, alpha * style.trailGlowAlpha);
                 // Spread the dust evenly over the draw.
-                int due = Mathf.RoundToInt(k * style.dustPerSegment);
-                for (; emitted < due; emitted++) EmitDust(Vector3.Lerp(lastTip, tip, Random.value), Color.Lerp(fromColor, color, k));
+                int due = Mathf.RoundToInt(k * dustCount);
+                for (; emitted < due; emitted++) EmitDust(Vector3.Lerp(lastTip, tip, Random.value), Color.Lerp(fromColor, color, k), dir);
                 lastTip = tip;
             }));
         }
@@ -81,15 +120,17 @@ namespace OneLine
             line.SetPosition(1, b);
         }
 
-        void EmitDust(Vector3 position, Color color)
+        void EmitDust(Vector3 position, Color color, Vector3 dir)
         {
+            var w = wand;
+            if (w.tintAmount > 0f) color = Color.Lerp(color, w.tint, w.tintAmount);
             var p = new ParticleSystem.EmitParams
             {
                 position = position,
-                velocity = (Vector3)(Random.insideUnitCircle * 0.25f) + Vector3.up * 0.08f, // slight drift
+                velocity = (Vector3)(Random.insideUnitCircle * w.scatter) + (Vector3)w.drift - dir * w.trailBack,
                 startColor = color,
-                startSize = Random.Range(0.025f, 0.06f),
-                startLifetime = Random.Range(0.6f, 1.1f),
+                startSize = Random.Range(w.size.x, w.size.y),
+                startLifetime = Random.Range(w.lifetime.x, w.lifetime.y),
             };
             dust.Emit(p, 1);
         }
