@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b31be1f805bd4ce787302d4c7c87f44, type: 3}
+  m_Name: AppConfig
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.AppConfig
+  passProductId: com.oneline.celestialpass
+  passTitle: Celestial Pass
+  passSubtitle: "No ads \xB7 forever"
+  passPriceLabel: $2.99
+  passBonusCoins: 500
+  passSkinId: skin.celestial
+  passPerks:
+  - "No interstitial ads \u2014 forever"
+  - Rewarded ads stay optional, for hints and extra time
+  - 'One-time gift: {0} coins'
+  - Exclusive Celestial Gold wand trail
+  mockStoreDelay: 1.2
+  privacyPolicyUrl: 
+  credits: 'Fonts: Cinzel & Quicksand (SIL Open Font License)'

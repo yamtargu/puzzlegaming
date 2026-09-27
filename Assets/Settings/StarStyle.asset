@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64d4dca6946aa44118f5789b01f752c1, type: 3}
+  m_Name: StarStyle
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.StarStyle
+  visitColors:
+  - {r: 0.3529412, g: 0.81960785, b: 1, a: 1}
+  - {r: 0.49803922, g: 0.84705883, b: 1, a: 1}
+  - {r: 0.654902, g: 0.54509807, b: 1, a: 1}
+  - {r: 0.7882353, g: 0.65882355, b: 1, a: 1}
+  finalColor: {r: 0.95686275, g: 0.8352941, b: 0.5529412, a: 1}
+  idleNode: {r: 0.8, g: 0.85, b: 0.95, a: 0.9}
+  idleEdge: {r: 1, g: 1, b: 1, a: 0.14}
+  backgroundCenter: {r: 0.07058824, g: 0.09019608, b: 0.16470589, a: 1}
+  backgroundEdge: {r: 0.039215688, g: 0.050980393, b: 0.08627451, a: 1}
+  backgroundTint: 0.3
+  breathePeriod: 2.6
+  breatheScale: 0.06
+  breatheFade: 0.15
+  popPeak: 1.22
+  popRest: 1.06
+  popUpTime: 0.08
+  popSettleTime: 0.32
+  sonarDuration: 1.3
+  sonarScale: 3.2
+  sonarAlpha: 0.55
+  starShader: {fileID: 4800000, guid: b9a01de8cc7b04f2295d4c5eb4ae5e06, type: 3}
+  heroLook:
+    points: 5
+    innerRatio: 0.4
+    tipRoundness: 0.05
+    edgeCurvature: 0.07
+    coreColor: {r: 1, g: 0.98, b: 0.92, a: 1}
+    tipColor: {r: 1, g: 0.7, b: 0.26, a: 1}
+    coreSize: 0.38
+    falloff: 1.3
+    coreBoost: 0.35
+    rimColor: {r: 1, g: 0.93, b: 0.72, a: 1}
+    rimWidth: 0.07
+    rimIntensity: 0.85
+    glowColor: {r: 1, g: 0.74, b: 0.36, a: 1}
+    glowRadius: 1.4
+    glowIntensity: 0.55
+    glowOpacity: 0.15
+    breatheGlow: 0.5
+    glintIntensity: 1.5
+    glintLength: 2.7
+    glintWidth: 0.045
+    glintColor: {r: 1, g: 0.96, b: 0.85, a: 1}
+    sheenIntensity: 0.5
+  minorLook:
+    points: 5
+    innerRatio: 0.42
+    tipRoundness: 0.05
+    edgeCurvature: 0.07
+    coreColor: {r: 1, g: 0.98, b: 0.92, a: 1}
+    tipColor: {r: 1, g: 0.76, b: 0.34, a: 1}
+    coreSize: 0.38
+    falloff: 1.3
+    coreBoost: 0.25
+    rimColor: {r: 1, g: 0.93, b: 0.72, a: 1}
+    rimWidth: 0.07
+    rimIntensity: 0.45
+    glowColor: {r: 1, g: 0.8, b: 0.45, a: 1}
+    glowRadius: 1.05
+    glowIntensity: 0.3
+    glowOpacity: 0.15
+    breatheGlow: 0.4
+    glintIntensity: 0.9
+    glintLength: 2.1
+    glintWidth: 0.045
+    glintColor: {r: 1, g: 0.96, b: 0.85, a: 1}
+    sheenIntensity: 0.4
+  heroScale: 1.25
+  idleTint: 0.15
+  visitedTint: 0.8
+  glintInterval: {x: 4, y: 10}
+  minorGlintSlowdown: 1.6
+  glintDuration: 0.45
+  pirouetteEnabled: 1
+  pirouetteHoverRadius: 0.38
+  pirouetteTiltTime: 0.12
+  pirouetteSpinTime: 0.6
+  pirouetteSpinJitter: 0.15
+  pirouetteHop: {x: 0.1, y: 0.24}
+  pirouetteSettleTime: 0.34
+  pirouetteSquash: 0.16
+  pirouetteFlash: 0.8
+  pirouetteCooldown: 0.8
+  sparkCount: {x: 3, y: 6}
+  sparkSpeed: 1.6
+  sparkLifetime: 0.5
+  sparkSize: 0.22
+  trailDrawTime: 0.3
+  trailWidth: 0.055
+  trailGlowWidth: 5
+  trailGlowAlpha: 0.3
+  dustPerSegment: 10
+  idleEdgeWidth: 0.03
+  dashPeriod: 0.22
+  movePunch: 1.015
+  movePunchTime: 0.22
+  failShakePixels: 5
+  failShakeTime: 0.22
+  rayCount: 18
+  rayLength: 6
+  rayWidth: 0.05
+  burstTime: 1.1
+  flashAlpha: 0.4
+  flashSize: 16

@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba89bdcfb540043cbae20557dbc7787a, type: 3}
+  m_Name: CompletionSettings
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.CompletionSettings
+  recognitionTime: 0.15
+  traceTime: 0.35
+  flareTime: 0.3
+  emergeTime: 0.35
+  reduceMotionTime: 0.45
+  brighten: 0.35
+  lineThicken: 1.35
+  haloAlpha: 0.22
+  haloScale: 1.5
+  pulseSize: 0.9
+  pingScale: 1.55
+  pingTime: 0.2
+  sparkleSize: 0.5
+  perSegmentTime: 0.08
+  minMergeTime: 0.8
+  maxMergeTime: 1.4
+  mergeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.6
+      outSlope: 0.6
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1.4
+      outSlope: 1.4
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  absorbTime: 0.12
+  orbSize: 0.6
+  orbGrowth: 1.5
+  streakTime: 0.14
+  streakWidth: 0.08
+  cameraZoom: 1.06
+  backgroundDim: 0.15
+  glideTime: 0.2
+  fusionCenterBias: 0.3
+  coreSize: 1.1
+  flashSize: 5
+  flashAlpha: 0.85
+  ringSize: 7
+  ringTime: 0.6
+  ringAlpha: 0.7
+  shakePixels: 5
+  glyphSize: 1.3
+  glyphAlpha: 0.9
+  rayLengthScale: 0.8
+  riseTime: 0.7
+  riseScale: 2.2
+  riseHeight: 0.6
+  riseDepth: 0.8
+  riseDim: 0.3
+  glowPulsePeriod: 0.9
+  raysAlpha: 0.16
+  raysSpin: 14
+  orbitSparkles: 4
+  sparkleOrbitSpeed: 60
+  nameFadeTime: 0.3
+  nameStagger: 0.08
+  shimmerDelay: 0.15
+  shimmerTime: 0.5
+  nameHoldTime: 0.4
+  signTextSize: 30
+  signTextSpacing: 22
+  nameTextSize: 70
+  nameGap: 40
+  nameRise: 24
+  exitTime: 0.35
+  puffCount: 28
+  puffSpeed: 0.7
+  emergeFrom: 0.08
+  hardScale: 1.2
+  bossScale: 1.5
+  bossFlareLength: 1.4
+  secondRingDelay: 0.12
+  bossRiseScale: 1.2

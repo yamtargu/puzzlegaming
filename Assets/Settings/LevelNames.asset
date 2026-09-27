@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7d30c4f070544d45975d045ac00c6db, type: 3}
+  m_Name: LevelNames
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.LevelNames
+  seed: 1729
+  names:
+  - Lyra
+  - Vega's Crown
+  - The Lantern
+  - Cassia
+  - Orion's Belt
+  - Altair
+  - Deneb
+  - The Swan
+  - Polaris
+  - Aurora's Veil
+  - Sirius
+  - The Shepherd
+  - Andromeda
+  - The Harp
+  - Capella
+  - Arcturus
+  - The Little Bear
+  - Pleiades
+  - The Seven Sisters
+  - Rigel
+  - Betelgeuse
+  - The Hunter
+  - Cygnus
+  - Draco's Coil
+  - Aquila
+  - Spica
+  - The Maiden
+  - Auriga
+  - Carina
+  - The Keel
+  - Corona
+  - The Northern Crown
+  - Perseus
+  - Cepheus
+  - Cassiopeia
+  - The Queen's Chair
+  - Hydra
+  - Fomalhaut
+  - Canopus
+  - Mira
+  - Alcor
+  - Mizar
+  - The Wanderer
+  - Luna's Thread
+  - The Silver Gate
+  - Evening Star
+  - Morning Star
+  - The Quiet Crown
+  - Nightingale
+  - The Lantern Bearer
+  - Whisperwind
+  - Starfall
+  - The Glass Bird
+  - Moonwell
+  - The Loom
+  - Ember Crown
+  - The Veil
+  - Solstice

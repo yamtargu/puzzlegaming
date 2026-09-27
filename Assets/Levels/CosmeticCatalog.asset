@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9a6ec8d025ea4701ac373f803c9ef75, type: 3}
+  m_Name: CosmeticCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.CosmeticCatalog
+  lineSkins:
+  - id: skin.tier
+    displayName: Starlight
+    price: 0
+    useTierColors: 1
+    exclusive: 0
+    line: {r: 1, g: 1, b: 1, a: 1}
+    node: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  - id: skin.snow
+    displayName: Snow
+    price: 40
+    useTierColors: 0
+    exclusive: 0
+    line: {r: 0.95, g: 0.96, b: 0.98, a: 1}
+    node: {r: 0.55, g: 0.58, b: 0.65, a: 1}
+  - id: skin.coral
+    displayName: Coral
+    price: 60
+    useTierColors: 0
+    exclusive: 0
+    line: {r: 1, g: 0.42, b: 0.35, a: 1}
+    node: {r: 0.55, g: 0.36, b: 0.34, a: 1}
+  - id: skin.lime
+    displayName: Lime
+    price: 80
+    useTierColors: 0
+    exclusive: 0
+    line: {r: 0.65, g: 1, b: 0.3, a: 1}
+    node: {r: 0.4, g: 0.5, b: 0.3, a: 1}
+  - id: skin.violet
+    displayName: Violet
+    price: 100
+    useTierColors: 0
+    exclusive: 0
+    line: {r: 0.72, g: 0.5, b: 1, a: 1}
+    node: {r: 0.45, g: 0.38, b: 0.6, a: 1}
+  - id: skin.gold
+    displayName: Gold
+    price: 150
+    useTierColors: 0
+    exclusive: 0
+    line: {r: 1, g: 0.8, b: 0.25, a: 1}
+    node: {r: 0.6, g: 0.5, b: 0.3, a: 1}
+  - id: skin.celestial
+    displayName: Celestial Gold
+    price: 0
+    useTierColors: 0
+    exclusive: 1
+    line: {r: 0.96, g: 0.84, b: 0.55, a: 1}
+    node: {r: 0.62, g: 0.53, b: 0.36, a: 1}
+  backgrounds:
+  - id: bg.tier
+    displayName: Deep space
+    price: 0
+    useTierColors: 1
+    exclusive: 0
+    background: {r: 0, g: 0, b: 0, a: 1}
+    edge: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  - id: bg.midnight
+    displayName: Midnight
+    price: 50
+    useTierColors: 0
+    exclusive: 0
+    background: {r: 0.04, g: 0.05, b: 0.09, a: 1}
+    edge: {r: 0.2, g: 0.22, b: 0.3, a: 1}
+  - id: bg.forest
+    displayName: Forest
+    price: 80
+    useTierColors: 0
+    exclusive: 0
+    background: {r: 0.05, g: 0.12, b: 0.08, a: 1}
+    edge: {r: 0.2, g: 0.3, b: 0.24, a: 1}
+  - id: bg.plum
+    displayName: Plum
+    price: 100
+    useTierColors: 0
+    exclusive: 0
+    background: {r: 0.13, g: 0.06, b: 0.14, a: 1}
+    edge: {r: 0.32, g: 0.22, b: 0.34, a: 1}
+  - id: bg.ember
+    displayName: Ember
+    price: 120
+    useTierColors: 0
+    exclusive: 0
+    background: {r: 0.16, g: 0.07, b: 0.05, a: 1}
+    edge: {r: 0.36, g: 0.22, b: 0.18, a: 1}

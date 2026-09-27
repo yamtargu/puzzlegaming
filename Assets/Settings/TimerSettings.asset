@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2e2f3f0551144a1f84c25bb11f291eb, type: 3}
+  m_Name: TimerSettings
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.TimerSettings
+  firstTimedLevel: 15
+  introHint: The stars wait for no one
+  introHintTime: 3.2
+  baseSeconds: 5
+  perNodeSeconds: 1.5
+  perDifficultyBitSeconds: 4
+  hardMultiplier: 1.2
+  bossMultiplier: 1.4
+  roundToSeconds: 5
+  minSeconds: 20
+  maxSeconds: 150
+  threeStarShare: 0.5
+  twoStarShare: 0.2
+  saturnSeconds: 15
+  maxSaturnPerLevel: 2
+  lunarSpeed: 0.5
+  lunarSeconds: 10
+  maxLunarPerLevel: 1
+  startingSaturn: 2
+  startingLunar: 2
+  bossThreeStarReward: 1
+  saturnPrice: 30
+  saturnPackPrice: 125
+  lunarPrice: 40
+  lunarPackPrice: 170
+  packSize: 5
+  hourglassSize: {x: 150, y: 220}
+  hourglassGap: 16
+  menuButtonSize: 96
+  timeLabelSize: 30
+  timeLabelGap: 4
+  sandGold: {r: 1, g: 0.83, b: 0.45, a: 1}
+  sandAmber: {r: 1, g: 0.6, b: 0.24, a: 1}
+  sandRed: {r: 0.95, g: 0.36, b: 0.34, a: 1}
+  sandSilver: {r: 0.72, g: 0.84, b: 1, a: 1}
+  amberShare: 0.3
+  redShare: 0.1
+  glassAlpha: 0.5
+  sheenAlpha: 0.22
+  sandGlowAlpha: 0.28
+  labelAlpha: 0.45
+  labelWarningAlpha: 0.95
+  streamMotes: 8
+  sandSparkles: 6
+  streamSpeed: 140
+  flipTime: 0.55
+  warningSeconds: 10
+  warningPulse: 0.05
+  crackTime: 0.6
+  timeUpShake: 10
+  refillTime: 0.8
+  winMotes: 6
+  winMoteTime: 0.9
+  boostButtonSize: 114
+  boostGap: 22
+  boostTopGap: 18
+  boostBadgeSize: 44
+  boostGlyphSize: 36
+  boostDisabledAlpha: 0.4
+  spiralTime: 0.7
+  floatTextRise: 90
+  floatTextTime: 1.1
+  moonVignetteAlpha: 0.55
+  moonTintAlpha: 0.012
+  moonTint: {r: 0.55, g: 0.7, b: 1, a: 1}
+  skySlowdown: 0.4
+  moonFadeTime: 0.6
+  timeUpSize: {x: 840, y: 790}
+  pauseSize: {x: 760, y: 900}
+  offerSize: {x: 780, y: 820}
+  panelButtonSize: {x: 560, y: 110}
+  panelButtonGap: 26

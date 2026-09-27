@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa52d7b83cb8407dbe3a18864aedd3a, type: 3}
+  m_Name: Level_031
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.LevelData
+  nodes:
+  - {x: 2, y: 0}
+  - {x: 1, y: 3}
+  - {x: 0, y: 1}
+  - {x: 3, y: 1}
+  - {x: 0, y: 2}
+  - {x: 0, y: 0}
+  - {x: 0, y: 4}
+  - {x: 1, y: 1}
+  - {x: 3, y: 0}
+  - {x: 2, y: 1}
+  - {x: 1, y: 2}
+  - {x: 0, y: 3}
+  - {x: 1, y: 0}
+  - {x: 1, y: 4}
+  edges:
+  - a: 9
+    b: 3
+  - a: 3
+    b: 8
+  - a: 8
+    b: 0
+  - a: 0
+    b: 12
+  - a: 12
+    b: 5
+  - a: 5
+    b: 2
+  - a: 2
+    b: 7
+  - a: 7
+    b: 10
+  - a: 10
+    b: 4
+  - a: 4
+    b: 11
+  - a: 11
+    b: 6
+  - a: 6
+    b: 13
+  - a: 13
+    b: 1
+  - a: 9
+    b: 7
+  - a: 10
+    b: 1
+  - a: 10
+    b: 11
+  - a: 5
+    b: 7
+  startNode: -1
+  solution: 090000000300000008000000000000000c0000000500000002000000070000000a000000040000000b000000060000000d00000001000000i
+  difficulty: 2.2320304

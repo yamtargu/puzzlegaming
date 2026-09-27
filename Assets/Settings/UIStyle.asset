@@ -1,0 +1,206 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2083d1170452e4236bb969138dfba84a, type: 3}
+  m_Name: UIStyle
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.UIStyle
+  starStyle: {fileID: 11400000, guid: 393edfb49ae5344a2ae00e2eb08388c1, type: 2}
+  levelNames: {fileID: 11400000, guid: 02b2e114faab6476a86a30429db758be, type: 2}
+  zodiac: {fileID: 11400000, guid: 18aeef9d782c44c6c9b36a40ea6609f4, type: 2}
+  titleFont: {fileID: 11400000, guid: 0ea3c39a2f4f84ef99e6b0007a73ba20, type: 2}
+  bodyFont: {fileID: 11400000, guid: df0eae4a7496442d899bac8b8491ba66, type: 2}
+  text: {r: 0.918, g: 0.941, b: 1, a: 1}
+  labelAlpha: 0.6
+  panelFill: {r: 0.071, g: 0.09, b: 0.165, a: 0.8}
+  modalCardAlpha: 0.98
+  outline: {r: 1, g: 1, b: 1, a: 0.2}
+  glassFill: {r: 0.05, g: 0.07, b: 0.13, a: 0.55}
+  glassInnerGlow: 0.07
+  dimAlpha: 0.6
+  badgeFillAlpha: 0.15
+  edgeMargin: 44
+  topBand: 400
+  bottomBand: 250
+  roundButton: 120
+  topButton: 96
+  iconSize: 46
+  panelRadius: 32
+  outlineWidth: 1.5
+  levelLabelSize: 28
+  levelLabelSpacing: 22
+  titleSize: 84
+  titleSpacing: 4
+  titleSpacingStart: 18
+  tierLineSize: 24
+  tierLineSpacing: 16
+  ornamentLength: 110
+  titleGlow: 0.35
+  badgeTextSize: 24
+  badgeHeight: 52
+  badgePulsePeriod: 2.4
+  orbitSpeed: 50
+  coinPillWidth: 220
+  coinTextSize: 40
+  coinCountTime: 0.6
+  coinPunch: 1.15
+  bottomRow: 0
+  progressStarSize: 26
+  progressSpacing: 52
+  titleInTime: 0.5
+  titleRise: 20
+  pressScale: 0.92
+  releaseOvershoot: 1.05
+  pressTime: 0.08
+  releaseTime: 0.25
+  panelOpenTime: 0.28
+  panelScaleFrom: 0.9
+  winScreenDelay: 0.9
+  stagger: 0.06
+  winTitleGoldTime: 0.35
+  screenFadeTime: 0.3
+  screenScaleFrom: 0.96
+  boardScaleFrom: 0.94
+  skyBlendTime: 0.9
+  backSwipeEdge: 40
+  backSwipeDistance: 220
+  gameTitle: One-Line
+  gameSubtitle: Path
+  homeLogoY: 0.74
+  homeProgressY: 0.56
+  homePlayY: 0.4
+  homeSecondaryY: 0.28
+  homePremiumY: 0.13
+  logoSize: 150
+  logoSpacing: 4
+  logoSubtitleSize: 50
+  logoSubtitleSpacing: 42
+  logoSubtitleGap: 118
+  logoConstellation:
+  - {x: 0, y: 0.18, z: 0.78}
+  - {x: 1, y: 0.55, z: 0.12}
+  - {x: 2, y: 0.7, z: 0.95}
+  - {x: 4, y: 0.3, z: 0.08}
+  - {x: 5, y: 0.5, z: 1.05}
+  - {x: 6, y: 0.45, z: 0.2}
+  - {x: 7, y: 0.9, z: 0.85}
+  logoLineWidth: 2
+  logoGlowWidth: 18
+  logoStarSize: 30
+  logoDelay: 0.35
+  logoDrawTime: 1.8
+  logoStarPopTime: 0.35
+  logoTwinkleSpeed: 1.4
+  homeSignSize: 30
+  progressBarStars: 24
+  progressBarWidth: 620
+  progressBarStarSize: 18
+  progressBarY: -62
+  progressLabelSize: 24
+  playButtonSize: {x: 660, y: 150}
+  playTextSize: 44
+  playGlowPeriod: 2.6
+  secondaryButtonSize: {x: 300, y: 128}
+  secondaryGap: 40
+  secondaryTextSize: 34
+  premiumButtonSize: {x: 300, y: 92}
+  homeIconSize: 48
+  homeDimStarAlpha: 0.22
+  wiggleDegrees: 5
+  wiggleTime: 0.35
+  signGlyphGap: 12
+  signGlyphStroke: 1.8
+  signLabelBox: 1000
+  ornamentGap: 18
+  ornamentAlpha: 0.66
+  panelMedallionRadius: 46
+  panelDrawTime: 0.5
+  panelTitleSize: 60
+  panelTitleY: 150
+  closeButtonSize: 84
+  closeButtonInset: 76
+  settingsSize: {x: 880, y: 1360}
+  settingsFirstRowY: 270
+  settingsRowHeight: 104
+  settingsRowWidth: 700
+  settingsSectionGap: 36
+  settingsTextSize: 36
+  settingsFooterY: 90
+  footerTextSize: 22
+  rowLineAlpha: 0.14
+  hairline: 1.5
+  shopHeaderGap: 70
+  premiumSize: {x: 900, y: 1120}
+  perkTextSize: 32
+  perkSpacing: 92
+  buyButtonSize: {x: 560, y: 128}
+  switchSize: {x: 132, y: 68}
+  switchKnobInset: 7
+  switchTime: 0.22
+  moonColor: {r: 0.78, g: 0.84, b: 0.96, a: 1}
+  switchOnFillAlpha: 0.22
+  switchOnOutlineAlpha: 0.8
+  mapTitle: The Zodiac Path
+  mapTitleSize: 44
+  mapTopBar: 150
+  mapNodeSpacing: 170
+  mapHouseGap: 400
+  mapBottomPad: 120
+  mapTopPad: 420
+  mapAmplitude: 250
+  mapWaveLevels: 9
+  mapJitter: 0.12
+  mapSeed: 12
+  mapLineWidth: 2.2
+  mapGlowWidth: 18
+  mapLockedLineAlpha: 0.22
+  mapDash: 12
+  mapDashGap: 12
+  mapStarSize: 46
+  mapCurrentSize: 66
+  mapLockedSize: 16
+  mapLockedColor: {r: 0.55, g: 0.62, b: 0.78, a: 0.5}
+  mapHaloSize: 190
+  mapHardRing: 34
+  mapBossRadius: 42
+  mapPipSize: 15
+  mapPipGap: 17
+  mapPipY: -40
+  mapNumberSize: 22
+  mapNumberX: 58
+  mapPulsePeriod: 1.8
+  mapCometOrbit: 58
+  mapCometSpeed: 70
+  mapShimmerSpeed: 240
+  mapShimmerSize: 40
+  mapShimmers: 3
+  mapPoolMargin: 500
+  mapChunk: 10
+  mapScrollTime: 0.6
+  mapScrollLead: 0.8
+  mapParallax: 0.55
+  mapFigureSize: 820
+  mapFigureAlpha: 0.08
+  mapFigureLockedAlpha: 0.035
+  mapHeaderSize: {x: 640, y: 150}
+  mapHeaderTextSize: 34
+  mapHeaderSubSize: 24
+  mapHeaderMedallion: 36
+  mapHeaderLockedAlpha: 0.4
+  mapRevealTime: 1.8
+  mapPopupSize: {x: 760, y: 700}
+  mapPlayButtonSize: {x: 400, y: 116}
+  mapComingSoon: More of the sky soon
+  hudButtonGap: 20
+  winButtonSize: {x: 300, y: 106}
+  winButtonGap: 30
+  burstRays: 16
+  burstTime: 1.1
+  burstRadius: 420

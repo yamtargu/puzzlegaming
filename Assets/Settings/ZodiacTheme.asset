@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22eb3818a404445d5a76e1191a523707, type: 3}
+  m_Name: ZodiacTheme
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.ZodiacTheme
+  names: {fileID: 11400000, guid: 0e81c17f3bf2a4e0699f39eb0bf9cdaa, type: 2}
+  constellations: {fileID: 11400000, guid: 1701a15ab8dd84c35ae5a459a4dc93f1, type: 2}
+  backgroundMaterial: {fileID: 2100000, guid: d07de04ca7e0b412aa3c68f1a8814322, type: 2}
+  gold: {r: 0.7882353, g: 0.6509804, b: 0.41960785, a: 1}
+  frameAlpha: 0.7
+  elementTint:
+  - {r: 0.8509804, g: 0.5568628, b: 0.2901961, a: 1}
+  - {r: 0.43137255, g: 0.56078434, b: 0.3529412, a: 1}
+  - {r: 0.7176471, g: 0.65882355, b: 0.8784314, a: 1}
+  - {r: 0.30980393, g: 0.6392157, b: 0.627451, a: 1}
+  elementAccent:
+  - {r: 0.9411765, g: 0.69803923, b: 0.47843137, a: 1}
+  - {r: 0.6627451, g: 0.7882353, b: 0.56078434, a: 1}
+  - {r: 0.8117647, g: 0.76862746, b: 0.9490196, a: 1}
+  - {r: 0.56078434, g: 0.827451, b: 0.8117647, a: 1}
+  outerLine: 1.5
+  innerLine: 0.75
+  lineGap: 8
+  cornerNotch: 26
+  glowWidth: 16
+  glowAlpha: 0.14
+  medallionRadius: 40
+  medallionGap: 10
+  crescentSize: 28
+  crescentGap: 22
+  cornerStarSize: 22
+  sideMotifLength: 40
+  titleFillAlpha: 0.82
+  starMapAlpha: 0.05
+  starMapInset: 14
+  glyphStroke: 2.4
+  dialWidth: 1.3
+  dialTick: 6
+  medallionDiscAlpha: 0.92
+  medallionGlowAlpha: 0.1
+  frameTopBelowButtons: 16
+  frameHeight: 236
+  labelY: 66
+  nameY: 130
+  tierY: 196
+  badgeBelowFrame: 50
+  framePadding: 56
+  minFrameWidth: 600
+  tierGlyphSize: 30
+  drawTime: 0.6
+  medallionInTime: 0.25
+  cornerStagger: 0.06
+  cornerTwinkleTime: 0.45
+  winGlowTime: 1.1
+  winGlowAlpha: 0.5
+  medallionTurn: 30
+  medallionTurnTime: 1.1
+  constellationAlpha: 0.05
+  constellationSize: 0.75
+  wheelAlpha: 0.03
+  wheelHighlightAlpha: 0.035
+  wheelSize: 0.85
+  wheelTurnSeconds: 600
+  planetAlpha: 0.035
+  planetCount: 5
+  planetSize: 0.035
+  planetDrift: 0.004
+  nebulaAlpha: 0.06
+  shootingStarAlpha: 0.08
+  shootingStarInterval: {x: 25, y: 60}
+  elementFadeTime: 1.5
+  homeWheelAlpha: 0.1
+  homeHighlightAlpha: 0.045
+  homeWheelSize: 0.6
+  homeWheelY: 0.48
+  homeZoom: 1.06
+  homeShootingStarInterval: {x: 8, y: 18}
+  transitionIn: 0.45
+  transitionHold: 1.1
+  transitionOut: 0.45
+  transitionSkipOut: 0.25
+  wheelTurnTime: 1.6
+  transitionGlyphSize: 200
+  transitionDim: 0.9
