@@ -4,13 +4,13 @@ namespace OneLine
 {
     public enum BoostType { SaturnsGift, LunarStillness }
 
-    /// <summary>Where boosts came from. RewardedAd / Iap are hooks for later — nothing grants from them yet.</summary>
+    /// <summary>Where boosts came from. RewardedAd: RewardedAds. Iap is a hook for later — nothing grants from it yet.</summary>
     public enum BoostSource { Shop, BossReward, RewardedAd, Iap, Debug }
 
     /// <summary>
     /// Time-boost inventory (saved by SaveService): Saturn's Gift (+seconds) and Lunar Stillness (slower timer).
-    /// The only purchases that affect gameplay. Buying spends coins through CoinManager; any future source (rewarded
-    /// ad, IAP) adds through <see cref="Grant"/>. Knows nothing about the timer or the UI.
+    /// The only purchases that affect gameplay. Buying spends coins through CoinManager; rewarded ads (RewardedAds) and
+    /// any future source (IAP) add through <see cref="Grant"/>. Knows nothing about the timer or the UI.
     /// </summary>
     public static class Boosts
     {

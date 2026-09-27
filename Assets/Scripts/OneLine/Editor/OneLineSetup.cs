@@ -194,9 +194,210 @@ namespace OneLine.EditorTools
                 Back("bg.plum", "Plum", 100, new Color(0.13f, 0.06f, 0.14f), new Color(0.32f, 0.22f, 0.34f)),
                 Back("bg.ember", "Ember", 120, new Color(0.16f, 0.07f, 0.05f), new Color(0.36f, 0.22f, 0.18f)),
             };
+            catalog.wands = BuildWands();
             EditorUtility.SetDirty(catalog);
+            AssignBoardShaders();
             AssetDatabase.SaveAssets();
             return catalog;
+        }
+
+        const string WandFolder = "Assets/Settings/Wands";
+
+        /// <summary>
+        /// The wands. Ids stay stable so owned / equipped wands survive: wand.stardust was the free default (now Classic),
+        /// wand.twinkle is now Stardust, wand.moonbeam Moonlight, wand.comet Comet. Ember keeps its old dust until Fire.
+        /// </summary>
+        static System.Collections.Generic.List<CosmeticCatalog.Wand> BuildWands()
+        {
+            CosmeticCatalog.Wand W(string id, string name, int price, WandRarity rarity, WandEffect effect, WandLook look) =>
+                new() { id = id, displayName = name, price = price, rarity = rarity, effect = effect, look = look };
+
+            return new()
+            {
+                W("wand.stardust", "Classic", 0, WandRarity.Common, WandEffect.Classic, Look("Classic", l => { })),
+                W("wand.moonbeam", "Moonlight", 120, WandRarity.Common, WandEffect.Moonlight, Look("Moonlight", l =>
+                {
+                    l.pathColorMix = 0.08f;
+                    l.lineColor = new Color(0.82f, 0.88f, 1f);
+                    l.glowColor = new Color(0.62f, 0.72f, 1f);
+                    l.coreWidth = 0.045f;
+                    l.glowWidth = 0.2f;
+                    l.glowAlpha = 0.22f;
+                    l.glowOpacity = 0.3f;
+                    l.coreHighlight = 0.3f;
+                    l.shimmerAmount = 0.7f;
+                    l.shimmerWavelength = 1.8f;
+                    l.shimmerSpeed = 0.45f;
+                    l.shimmerSharpness = 8f;
+                    l.dustColors = new[] { new Color(0.86f, 0.9f, 1f), new Color(0.74f, 0.82f, 1f) };
+                    l.dustPerUnit = 4f;
+                    l.dustIdleRate = 0.3f;
+                    l.dustMaxPerFrame = 3;
+                    l.dustMaxParticles = 80;
+                    l.dustSize = new Vector2(0.035f, 0.07f);
+                    l.dustLifetime = new Vector2(1.4f, 2.2f);
+                    l.dustScatter = 0.05f;
+                    l.dustDrift = new Vector2(0f, 0.16f);
+                    l.burstShape = DustShape.Star;
+                    l.burstCount = new Vector2Int(8, 10);
+                    l.burstSpeed = 0.6f;
+                    l.burstLifetime = 0.45f;
+                    l.burstSize = new Vector2(0.04f, 0.08f);
+                    l.burstColors = new[] { new Color(0.85f, 0.9f, 1f) };
+                    l.burstLineColorMix = 0f;
+                })),
+                W("wand.twinkle", "Stardust", 300, WandRarity.Rare, WandEffect.Stardust, Look("Stardust", l =>
+                {
+                    l.pathColorMix = 0.12f;
+                    l.lineColor = new Color(1f, 0.94f, 0.78f);
+                    l.glowColor = new Color(1f, 0.82f, 0.45f);
+                    l.coreWidth = 0.05f;
+                    l.glowWidth = 0.34f;
+                    l.glowAlpha = 0.32f;
+                    l.glowOpacity = 0.35f;
+                    l.coreHighlight = 0.55f;
+                    l.sparkleSpacing = 0.16f;
+                    l.sparkleSize = 0.1f;
+                    l.sparkleRate = 0.55f;
+                    l.sparkleIntensity = 1.5f;
+                    l.dustShape = DustShape.Sparkle;
+                    l.dustColors = new[] { new Color(1f, 0.92f, 0.65f), new Color(1f, 1f, 0.92f), new Color(1f, 0.8f, 0.45f) };
+                    l.dustPerUnit = 14f;
+                    l.dustIdleRate = 0.8f;
+                    l.dustMaxPerFrame = 6;
+                    l.dustMaxParticles = 200;
+                    l.dustSize = new Vector2(0.08f, 0.15f);
+                    l.dustLifetime = new Vector2(0.7f, 1.2f);
+                    l.dustScatter = 0.15f;
+                    l.dustDrift = new Vector2(0f, -0.12f);
+                    l.dustGravity = 0.25f;
+                    l.dustTwinkle = true;
+                    l.burstCount = new Vector2Int(14, 18);
+                    l.burstSpeed = 1.3f;
+                    l.burstLifetime = 0.45f;
+                    l.burstSize = new Vector2(0.08f, 0.15f);
+                    l.burstColors = new[] { Color.white, new Color(1f, 0.85f, 0.5f) };
+                    l.burstLineColorMix = 0.1f;
+                })),
+                W("wand.rainbow", "Rainbow", 300, WandRarity.Rare, WandEffect.Rainbow, Look("Rainbow", l =>
+                {
+                    l.pathColorMix = 0f;
+                    l.coreWidth = 0.058f;
+                    l.glowWidth = 0.34f;
+                    l.glowAlpha = 0.34f;
+                    l.glowOpacity = 0.45f;
+                    l.coreHighlight = 0.4f;
+                    l.hueCyclesPerUnit = 0.12f;
+                    l.hueSpeed = 0.06f;
+                    l.hueSaturation = 0.42f;
+                    l.dustPerUnit = 12f;
+                    l.dustSize = new Vector2(0.05f, 0.1f);
+                    l.dustLifetime = new Vector2(0.7f, 1.2f);
+                    l.dustDrift = new Vector2(0f, 0.06f);
+                    l.burstCount = new Vector2Int(12, 16);
+                    l.burstSpeed = 1.2f;
+                    l.burstLineColorMix = 0f;
+                })),
+                W("wand.comet", "Comet", 300, WandRarity.Rare, WandEffect.Comet, Look("Comet", l =>
+                {
+                    l.pathColorMix = 0.1f;
+                    l.lineColor = new Color(0.82f, 0.92f, 1f);
+                    l.glowColor = new Color(0.55f, 0.75f, 1f);
+                    l.coreWidth = 0.05f;
+                    l.coreSoftness = 0.85f;
+                    l.glowWidth = 0.38f;
+                    l.glowAlpha = 0.42f;
+                    l.glowOpacity = 0.3f;
+                    l.coreHighlight = 0.2f;
+                    l.cometHeadColor = new Color(0.92f, 0.97f, 1f);
+                    l.cometTailColor = new Color(0.55f, 0.78f, 1f);
+                    l.dustColors = new[] { new Color(0.8f, 0.92f, 1f), Color.white };
+                    l.dustPerUnit = 6f;
+                    l.dustSize = new Vector2(0.03f, 0.06f);
+                    l.dustLifetime = new Vector2(0.3f, 0.6f);
+                    l.dustScatter = 0.35f;
+                    l.dustDrift = Vector2.zero;
+                    l.dustTrailBack = 0.8f;
+                    l.burstCount = new Vector2Int(8, 12);
+                    l.burstSpeed = 1.6f;
+                    l.burstLifetime = 0.25f;
+                    l.burstSize = new Vector2(0.04f, 0.08f);
+                    l.burstColors = new[] { new Color(0.85f, 0.95f, 1f), Color.white };
+                    l.burstLineColorMix = 0f;
+                    l.burstFlashSize = 0.55f;
+                    l.burstFlashColor = new Color(0.8f, 0.92f, 1f);
+                    l.burstFlashTime = 0.18f;
+                })),
+                W("wand.goldink", "Gold Ink", 300, WandRarity.Rare, WandEffect.GoldInk, Look("Gold Ink", l =>
+                {
+                    l.pathColorMix = 0f;
+                    l.lineColor = new Color(1f, 0.78f, 0.36f);
+                    l.glowColor = new Color(1f, 0.68f, 0.28f);
+                    l.coreWidth = 0.06f;
+                    l.coreSoftness = 0.15f;
+                    l.glowWidth = 0.26f;
+                    l.glowAlpha = 0.18f;
+                    l.glowOpacity = 0.4f;
+                    l.coreHighlight = 0.15f;
+                    l.metallic = 0.85f;
+                    l.shimmerAmount = 0.55f;
+                    l.shimmerWavelength = 2.2f;
+                    l.shimmerSpeed = 0.8f;
+                    l.shimmerSharpness = 14f;
+                    l.dustShape = DustShape.Flake;
+                    l.dustColors = new[] { new Color(1f, 0.82f, 0.4f), new Color(1f, 0.9f, 0.6f), new Color(0.9f, 0.66f, 0.28f) };
+                    l.dustPerUnit = 6f;
+                    l.dustIdleRate = 0.4f;
+                    l.dustMaxPerFrame = 4;
+                    l.dustMaxParticles = 120;
+                    l.dustSize = new Vector2(0.06f, 0.11f);
+                    l.dustLifetime = new Vector2(1.2f, 1.8f);
+                    l.dustScatter = 0.12f;
+                    l.dustDrift = new Vector2(0f, -0.05f);
+                    l.dustGravity = 0.12f;
+                    l.dustSpin = new Vector2(60f, 200f);
+                    l.dustFlip = 1.6f;
+                    l.dustFlutter = 0.25f;
+                    l.burstCount = new Vector2Int(10, 14);
+                    l.burstSpeed = 1f;
+                    l.burstColors = new[] { new Color(1f, 0.85f, 0.45f), new Color(1f, 0.95f, 0.75f) };
+                    l.burstLineColorMix = 0f;
+                })),
+                // Old dust-only wand, until Fire (phase 3) replaces it.
+                W("wand.ember", "Ember", 110, WandRarity.Rare, WandEffect.Classic, Look("Ember", l =>
+                {
+                    l.dustColors = new[] { new Color(1f, 0.55f, 0.2f), new Color(1f, 0.75f, 0.35f) };
+                    l.dustLineColorMix = 0.3f;
+                    l.dustPerUnit = 9f;
+                    l.dustSize = new Vector2(0.02f, 0.05f);
+                    l.dustLifetime = new Vector2(0.8f, 1.4f);
+                    l.dustScatter = 0.15f;
+                    l.dustDrift = new Vector2(0f, 0.35f);
+                })),
+            };
+        }
+
+        // Creates a wand look with these values the first time; later runs keep whatever was tuned in the inspector.
+        static WandLook Look(string name, System.Action<WandLook> preset)
+        {
+            string path = $"{WandFolder}/{name}.asset";
+            var look = AssetDatabase.LoadAssetAtPath<WandLook>(path);
+            if (look) return look;
+            if (!AssetDatabase.IsValidFolder(WandFolder)) AssetDatabase.CreateFolder("Assets/Settings", "Wands");
+            look = ScriptableObject.CreateInstance<WandLook>();
+            preset(look);
+            AssetDatabase.CreateAsset(look, path);
+            return look;
+        }
+
+        // The star and wand-line shaders, referenced from StarStyle so builds include them.
+        static void AssignBoardShaders()
+        {
+            var stars = AssetDatabase.LoadAssetAtPath<StarStyle>(StarStylePath);
+            if (!stars) return;
+            if (!stars.starShader) stars.starShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/Shaders/StarSDF.shader");
+            if (!stars.wandShader) stars.wandShader = AssetDatabase.LoadAssetAtPath<Shader>("Assets/Shaders/WandLine.shader");
+            EditorUtility.SetDirty(stars);
         }
 
         [MenuItem("One Line/Play Plus Test Level Only")]
@@ -286,6 +487,7 @@ namespace OneLine.EditorTools
             pathManager.style = trail.style = feedback.style = parallax.style = starStyle;
             parallax.boardView = boardView;
             var catalog = AssetDatabase.LoadAssetAtPath<CosmeticCatalog>(CatalogPath);
+            trail.cosmetics = catalog;
             pathManager.feedback = feedback;
             levelManager.pathManager = pathManager;
             levelManager.levelPack = pack;

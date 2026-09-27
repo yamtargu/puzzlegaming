@@ -10,7 +10,8 @@ namespace OneLine
     /// emoji) and a crisp count badge. Usable boosts stand out — a bright gold ring, a light glyph, a soft glow behind and a
     /// very slow breath (paused with the timer); unusable ones (none left, or not allowed now) keep the faded look.
     /// Disabled while paused, after time up, during the completion and past the per-level cap.
-    /// With none left the button shakes and opens a small offer card (packs of 1 and 5 for coins; shows what's missing).
+    /// With none left the button shakes and opens a small offer card (packs of 1 and 5 for coins, shows what's missing,
+    /// and a free one for a rewarded ad — RewardedAds, capped per day).
     /// Effects: Saturn's Gift spirals a ring of gold light into the hourglass with a deep chime; Lunar Stillness lays a
     /// faint moonlight vignette and a cool tint over the sky, slows the sky's twinkle/drift and runs a thin countdown
     /// ring around its button. Uses LevelTimer only through TryExtend / TrySlow; the timer does the rules.
@@ -52,6 +53,10 @@ namespace OneLine
         Cartouche offerFrame;
         TextMeshProUGUI offerTitle, offerText, offerOwned, offerBalance, offerMessage;
         readonly TextMeshProUGUI[] offerPrices = new TextMeshProUGUI[2];
+        Button offerAd;
+        CanvasGroup offerAdGroup;
+        TextMeshProUGUI offerAdLabel;
+        bool watching;
         BoostType offerType;
 
         public bool OfferOpen => offerGroup && offerGroup.gameObject.activeSelf;
@@ -296,6 +301,7 @@ namespace OneLine
 
         public void CloseOffer()
         {
+            if (watching) return; // wait for the ad's answer
             if (OfferOpen) UIKit.Close(offerGroup, offerCard, style);
         }
 
@@ -305,6 +311,41 @@ namespace OneLine
             offerBalance.SetText("{0} coins", CoinManager.GetBalance());
             offerPrices[0].SetText("Buy 1  ·  {0}", Boosts.Price(offerType, 1));
             offerPrices[1].SetText("Buy {0}  ·  {1}", (float)s.packSize, Boosts.Price(offerType, s.packSize));
+            if (!offerAd) return;
+            bool left = RewardedAds.LeftToday > 0;
+            if (watching) offerAdLabel.text = "Loading the ad…";
+            else if (left) offerAdLabel.SetText("Watch an ad  ·  +{0} free", RewardedAds.Amount);
+            else offerAdLabel.text = "No more free ads today";
+            offerAd.interactable = left && !watching;
+            offerAdGroup.alpha = left ? 1f : s.boostDisabledAlpha;
+        }
+
+        // Rewarded ad: a free boost for the offer's type (paused meanwhile — the card counts as an open panel).
+        void WatchAd()
+        {
+            if (watching) return;
+            if (!RewardedAds.CanWatch)
+            {
+                offerMessage.text = RewardedAds.LeftToday > 0 ? "No ad available right now — try again soon" : "";
+                UIKit.Wiggle(offerAd.transform, style);
+                return;
+            }
+            watching = true;
+            offerMessage.text = "";
+            RefreshOffer();
+            RewardedAds.WatchForBoost(offerType, granted =>
+            {
+                watching = false;
+                if (!this) return;
+                RefreshOffer();
+                if (!granted)
+                {
+                    offerMessage.text = "The ad didn't finish — no reward this time";
+                    return;
+                }
+                UIKit.Burst(offerCard, new Vector2(0f, 120f), style.Gold, style);
+                CloseOffer();
+            });
         }
 
         void Buy(int amount)
@@ -412,8 +453,12 @@ namespace OneLine
 
         void BuildOffer(Transform canvasHost)
         {
+            var size = s.panelButtonSize;
+            bool ads = s.rewardedAdsEnabled;
+            // With rewarded ads the card grows by one button row (bottom texts are anchored to the bottom).
+            var cardSize = s.offerSize + (ads ? new Vector2(0f, size.y + s.panelButtonGap) : Vector2.zero);
             var canvas = UIKit.MakeCanvas(canvasHost, "Boost Offer Canvas", 21, true);
-            (offerGroup, offerCard) = UIKit.Modal(canvas.transform, "Boost Offer", style, s.offerSize, CloseOffer);
+            (offerGroup, offerCard) = UIKit.Modal(canvas.transform, "Boost Offer", style, cardSize, CloseOffer);
             offerFrame = offerCard.GetComponent<Cartouche>();
             UIKit.CloseButton(offerCard, style, CloseOffer);
             var top = new Vector2(0.5f, 1f);
@@ -426,7 +471,6 @@ namespace OneLine
             offerOwned = UIKit.Text(offerCard, "Owned", body, 28f, UIKit.WithAlpha(style.text, style.labelAlpha), top,
                 new Vector2(0f, -(y + 86f)), new Vector2(600f, 44f), 6f, FontStyles.SmallCaps);
             float by = y + 190f;
-            var size = s.panelButtonSize;
             for (int i = 0; i < 2; i++)
             {
                 int amount = i == 0 ? 1 : s.packSize;
@@ -441,6 +485,12 @@ namespace OneLine
                 }
                 UIKit.Image(button.transform, "Coin", UIKit.Coin, style.Gold, new Vector2(1f, 0.5f), new Vector2(-50f, 0f),
                     Vector2.one * style.iconSize * 0.8f);
+            }
+            if (ads)
+            {
+                offerAd = PanelKit.Button(offerCard, style, "Watch Ad", "", top, new Vector2(0f, -(by + 2f * (size.y + s.panelButtonGap))),
+                    size, false, WatchAd, out offerAdLabel);
+                offerAdGroup = offerAd.gameObject.AddComponent<CanvasGroup>();
             }
             offerBalance = UIKit.Text(offerCard, "Balance", body, 30f, style.Gold, new Vector2(0.5f, 0f), new Vector2(0f, 150f),
                 new Vector2(600f, 44f), 3f, FontStyles.Bold);

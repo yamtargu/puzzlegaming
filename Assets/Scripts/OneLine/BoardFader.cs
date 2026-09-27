@@ -31,9 +31,11 @@ namespace OneLine
             if (!pivot) return;
             tween?.Kill();
             if (!visible && !pivot.gameObject.activeSelf) return;
+            float current = alpha;
+            if (fading) { alpha = 1f; Apply(); } // interrupted mid-fade: put the true colors back before capturing again
             pivot.gameObject.SetActive(true);
             Capture(pivot);
-            float from = visible ? 0f : alpha, to = visible ? 1f : 0f;
+            float from = visible ? 0f : current, to = visible ? 1f : 0f;
             float scaleFrom = visible ? style.boardScaleFrom : 1f, scaleTo = visible ? 1f : style.boardScaleFrom;
             if (instant)
             {

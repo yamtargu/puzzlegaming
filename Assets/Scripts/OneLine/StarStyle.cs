@@ -91,6 +91,8 @@ namespace OneLine
         public float sparkSize = 0.22f;
 
         [Header("Wand trail")]
+        [Tooltip("OneLine/WandLine: the drawn line of every wand. Without it the line falls back to two plain LineRenderers.")]
+        public Shader wandShader;
         public float trailDrawTime = 0.3f;
         public float trailWidth = 0.055f;
         [Tooltip("Soft colored glow under each segment, as a multiple of the trail width.")]

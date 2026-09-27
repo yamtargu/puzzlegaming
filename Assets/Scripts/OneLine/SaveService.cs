@@ -6,7 +6,7 @@ namespace OneLine
 {
     /// <summary>
     /// Every saved value of the game in one place (PlayerPrefs underneath): progress, star ratings, coins, settings,
-    /// purchases, cosmetics, time boosts and local solve times. Keys stay compatible with earlier saves.
+    /// purchases, cosmetics, time boosts, the daily rewarded-ad count and local solve times. Keys stay compatible with earlier saves.
     /// </summary>
     public static class SaveService
     {
@@ -30,6 +30,9 @@ namespace OneLine
         public const string TimerIntroKey = "OneLine.TimerIntro";  // the first timed level's hint was shown
         public const string SolveSumPrefix = "OneLine.SolveSum.";  // + level index: summed solve seconds
         public const string SolveCountPrefix = "OneLine.SolveN.";  // + level index: wins timed
+        public const string WandKey = "OneLine.Wand";              // equipped wand (trail effect)
+        public const string AdDayKey = "OneLine.Ads.Day";          // local date (yyyymmdd) of the rewarded-ad count
+        public const string AdCountKey = "OneLine.Ads.Count";      // rewarded ads watched on that day
 
         /// <summary>Raised after a setting or an entitlement changes. Argument: the key that changed.</summary>
         public static event Action<string> Changed;
@@ -106,6 +109,26 @@ namespace OneLine
 
         public static bool TimerIntroSeen { get => GetInt(TimerIntroKey, 0) == 1; set => SetInt(TimerIntroKey, value ? 1 : 0); }
 
+        /// <summary>Rewarded ads watched today (local calendar day); resets on a new day.</summary>
+        public static int RewardedAdsToday => GetInt(AdDayKey, 0) == Today ? GetInt(AdCountKey, 0) : 0;
+
+        public static void RecordRewardedAd()
+        {
+            int count = RewardedAdsToday + 1;
+            SetInt(AdDayKey, Today);
+            SetInt(AdCountKey, count);
+            Save();
+        }
+
+        static int Today
+        {
+            get
+            {
+                var d = DateTime.Now;
+                return d.Year * 10000 + d.Month * 100 + d.Day;
+            }
+        }
+
         /// <summary>Adds one win's solve time (first touch → win, paused time excluded) to the level's local average.</summary>
         public static void RecordSolveTime(int index, float seconds)
         {
@@ -145,11 +168,13 @@ namespace OneLine
 
         public static string EquippedSkin { get => GetString(SkinKey, ""); set => SetString(SkinKey, value); }
         public static string EquippedBackground { get => GetString(BackgroundKey, ""); set => SetString(BackgroundKey, value); }
+        public static string EquippedWand { get => GetString(WandKey, ""); set => SetString(WandKey, value); }
 
         public static void ClearEquipped()
         {
             DeleteKey(SkinKey);
             DeleteKey(BackgroundKey);
+            DeleteKey(WandKey);
         }
 
         // ---------- storage ----------

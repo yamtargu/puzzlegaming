@@ -16,7 +16,7 @@ Reply to the user in casual Turkish. Prompts/code comments in English.
 - Art is procedural: `Art.cs` (sprites), `VectorGraphics.cs` (anti-aliased uGUI lines/discs), `UIKit.cs` (panels/buttons/text), `UIParts.cs` (the gold celestial frame + medallion). Reuse these, don't add image files or packages.
 - Easing is in `Tween.cs`. Systems talk through C# events, e.g. gameplay raises them and visuals subscribe. Visual scripts never change gameplay state.
 - All persistence goes through `SaveService` (PlayerPrefs wrapper; keep keys backward-compatible).
-- Coins buy cosmetics and the two time boosts (Saturn's Gift, Lunar Stillness). The time boosts are the ONLY gameplay-affecting purchases; nothing else purchasable may change gameplay. No ad buttons yet — `Boosts.Grant(type, amount, source)` is the hook for a future rewarded ad / IAP.
+- Coins buy cosmetics and the two time boosts (Saturn's Gift, Lunar Stillness). The time boosts are the ONLY gameplay-affecting purchases; nothing else purchasable may change gameplay. Rewarded ads grant boosts through `Boosts.Grant(type, amount, BoostSource.RewardedAd)` (see `Ads`); IAP would use the same hook.
 - No per-frame allocations. Pool particles/sprites. Respect `Screen.safeArea`. Reference resolution 1080×1920.
 
 ## Where things live (`Assets/Scripts/OneLine/`)
@@ -32,11 +32,13 @@ Reply to the user in casual Turkish. Prompts/code comments in English.
 - `LevelTimer` — pure logic, no UI: per-LEVEL timer (retries don't refill; leaving to the map and back resumes it), starts on the first board touch (`PathManager.BoardTouched`), unscaled time, pauses via `AddPauseSource` (ScreenRouter registers screens/panels/house transition) and app background, time up → `PathManager.SetLocked`. Stars by time left (3 ≥50%, 2 ≥20%, else 1) → `LevelManager.LastStars` → WinPanel + SaveService. Also records local solve times (`SaveService.AverageSolveTime`). Events: `Started`, `Tick(remaining01)`, `TimeUp`, `Extended(s)`, `SlowStarted/Ended`, `Configured(timed)`, `PausedChanged`, `Won(stars)`.
 - `TimerSettings` — formula (base + perNode·nodes + perBit·bits, ×1.2 HARD / ×1.4 BOSS, ceil 5 s, clamp 20–150), stars, boost rules/prices, all hourglass/boost/panel visuals.
 - `Boosts` — static inventory (SaveService, start 2 each, +1 Saturn's Gift for a timed BOSS's first 3-star clear), `TryBuy`, `Grant`. Prices ≈ 3 / 4 levels of coins (30 / 40, packs of 5: 125 / 170).
-- Views (subscribe only): `HourglassView` (+ `HourglassSand` mesh), bottom-left above the Restart button (safe-area bottom-left anchor + pivot; `HUD.HourglassLeft/Bottom` keep the flip on screen and clear of Restart, `BottomBlock` reserves the column from the board): waits with the sand below until the first touch (`LevelTimer.Started`), then flips (InOutBack, scale punch, gold burst); loops pause with the timer, `BoostBar` (two boost buttons under the coins, offer card, Saturn spiral, Lunar moonlight overlay + sky `timeScale`), `TimeUpPanel`, `PausePanel` (the HUD's astrolabe menu button replaces Settings + Map on timed levels). HUD hides the board while a started timer is paused or time is up.
+- Views (subscribe only): `HourglassView` (+ `HourglassSand` mesh), bottom-left above the Restart button (safe-area bottom-left anchor + pivot; `HUD.HourglassLeft/Bottom` keep the flip on screen and clear of Restart, `BottomBlock` reserves the column from the board): waits with the sand below until the first touch (`LevelTimer.Started`), then flips (InOutBack, scale punch, gold burst); loops pause with the timer, `BoostBar` (two boost buttons under the coins, offer card with coin packs + a rewarded-ad button, Saturn spiral, Lunar moonlight overlay + sky `timeScale`), `TimeUpPanel` (coin/ad Saturn's Gift, Try again), `PausePanel` (the HUD's astrolabe menu button replaces Settings + Map on timed levels). HUD hides the board while a started timer is paused or time is up.
 - `HintSystem` — ghost line showing the next solution steps. `AutoPlayer` — demo bot that solves levels.
 
 **Board visuals**
-- `WandTrail` (drawn line + dust), `NodeGlow` (Light2D per node), `DepthFeedback` + `BoardView` (2.5D shadows/tilt), `BoardFader`, `ParallaxBackground`.
+- `WandTrail` (the drawn path, styled by the equipped wand): pooled LineRenderers with the `WandLine` shader (capsule SDF: AA core, round ends, glow; modes per `WandEffect`), drag dust following `PathManager.Dragged` (visual-only event, board-local finger point, also raised by `SimulateDrag`), a reach burst per star. One dust + one burst ParticleSystem, reconfigured per wand. `Clear()` returns everything to the pool.
+- Wands: `CosmeticCatalog.Wand` (id, price, `effect`, `rarity`, `look`) + `WandLook` ScriptableObjects in `Assets/Settings/Wands/` (every line/dust/burst value; created once by Setup, never overwritten). `WandPreview` = the live uGUI preview in the shop (animates only while visible). Effects so far: Classic, Stardust (glints), Rainbow (hue along the path), Moonlight (sliding shimmer), Comet (head + tail at the finger), Gold Ink (width follows finger speed, metallic). Stable ids: `wand.stardust` = Classic (free default), `wand.twinkle` = Stardust, `wand.moonbeam` = Moonlight, `wand.comet` = Comet; `wand.ember` is still the old dust-only wand until Fire. Prices ≈ Common 120 / Rare 300 / Legendary 700.
+- `NodeGlow` (Light2D per node), `DepthFeedback` + `BoardView` (2.5D shadows/tilt), `BoardFader`, `ParallaxBackground`.
 - `GameFeedback` — sounds, haptics, small shakes.
 - `CompletionSequence` + `CompletionSettings`: level-complete "constellation fusion" (merge along the path, flare, sign rises with the level name). Events: `Arrived`, `Finished`. `WinPanel` waits for `Finished`.
 
@@ -48,7 +50,7 @@ Reply to the user in casual Turkish. Prompts/code comments in English.
 - `HomeScreen`, `LevelMap` ("Zodiac Path", virtualized), `HUD` (title cartouche, buttons, top/bottom reserve → PathManager), `ProgressDots`, `WinPanel`, `SettingsPanel`, `ShopUI`, `PremiumPanel`.
 
 **Economy / services**
-- `CoinManager` (balance, `BalanceChanged`), `CosmeticCatalog` + `Cosmetics` (line skins & backgrounds; colors only for now), `Purchases` (`PurchaseService.Current`, currently a mock store; real Unity IAP later), `AudioService` (music/SFX toggles), `AppConfig`.
+- `CoinManager` (balance, `BalanceChanged`), `CosmeticCatalog` + `Cosmetics` (line skins = colors, backgrounds, wands = line + dust effects; looks only), `Purchases` (`PurchaseService.Current`, currently a mock store; real Unity IAP later), `Ads` (`IAdService` / `AdService.Current`, currently a mock; `RewardedAds`: free boost per ad, daily cap in TimerSettings), `AudioService` (music/SFX toggles), `AppConfig`.
 
 **Editor** (`Editor/`, menu **One Line/…**)
 - `Setup Levels + Scene` (OneLineSetup, safe to re-run; `SetupTimer` wires the timer parts), `Generate 500 Levels` (LevelGenerator, deterministic; recalculates time limits after), `Validate All Levels` (LevelValidation, build fails on unsolvable levels), `Recalculate Time Limits` (TimeLimits: fills `LevelData.timeLimit`, skips manual ones, prints the table with local avg solve times + the design's expected values), `Build UI Fonts` (FontSetup: Cinzel = titles, Quicksand = body, with Turkish glyphs), `Play Plus Test Level Only`.
@@ -58,8 +60,8 @@ Reply to the user in casual Turkish. Prompts/code comments in English.
 - Fonts: `Assets/Fonts/` (Cinzel, Quicksand, OFL). Music: `Assets/Audio/OneLineTheme.mp3`.
 
 ## Not built yet (planned)
-- Ads (interstitial + rewarded via an `IAdService`, Unity LevelPlay later). A rewarded ad for boosts would call `Boosts.Grant(type, n, BoostSource.RewardedAd)`.
-- "Wands" shop tab (trail effects), real IAP (boost packs could grant via `BoostSource.Iap`).
+- Real ad network: a Unity LevelPlay `IAdService` assigned to `AdService.Current` (rewarded ads already work against the mock). Interstitials aren't built (the Celestial Pass would turn them off).
+- Real IAP (boost packs could grant via `BoostSource.Iap`).
 - Time-limit tuning from real data: `Recalculate Time Limits` prints local average solve times; no remote analytics yet.
 - Par-time coin bonus (`CoinManager.ParTimeBonus`) is still unused — callers pass `beatParTime: false`.
 

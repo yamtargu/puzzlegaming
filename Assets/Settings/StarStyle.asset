@@ -100,6 +100,7 @@ MonoBehaviour:
   sparkSpeed: 1.6
   sparkLifetime: 0.5
   sparkSize: 0.22
+  wandShader: {fileID: 4800000, guid: cc4505be45b914384baa93ed9bc03cc7, type: 3}
   trailDrawTime: 0.3
   trailWidth: 0.055
   trailGlowWidth: 5

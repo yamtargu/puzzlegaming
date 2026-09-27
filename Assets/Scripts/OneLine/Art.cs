@@ -58,6 +58,23 @@ namespace OneLine
         public static Sprite StarQuad => starQuad ? starQuad : starQuad = Sprite.Create(Texture2D.whiteTexture,
             new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4f / StarQuadRadii, 0, SpriteMeshType.FullRect);
 
+        static Sprite mote;
+
+        /// <summary>A mote of light, 1 world unit across: a bright core with a short soft halo — for fairy dust.</summary>
+        public static Sprite Mote => mote ? mote : mote = MakeMote(64);
+
+        static Sprite flake;
+
+        /// <summary>Outline of a gold-leaf flake, centered on 0, about 1 unit across (also drawn by WandPreview).</summary>
+        public static readonly Vector2[] FlakeShape =
+            { new(-0.32f, -0.2f), new(0.12f, -0.4f), new(0.4f, -0.02f), new(0.2f, 0.38f), new(-0.28f, 0.22f) };
+
+        /// <summary>
+        /// A gold-leaf flake, 1 world unit across: an irregular white shard, brighter toward one corner, so it reads
+        /// as metal when tinted gold. For Gold Ink's dust.
+        /// </summary>
+        public static Sprite Flake => flake ? flake : flake = MakeFlake(48);
+
         /// <summary>Thin anti-aliased ring, 1 world unit across — for the sonar pulse.</summary>
         public static Sprite Ring => ring ? ring : ring = MakeRing(160, 0.035f);
 
@@ -241,6 +258,45 @@ namespace OneLine
                 float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(r, r)) / r; // 0 center, 1 edge
                 float a = 1f - Mathf.SmoothStep(0.35f, 1f, d);
                 px[y * size + x] = new Color32(255, 255, 255, (byte)(a * 255));
+            }
+            tex.SetPixels32(px);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
+        }
+
+        static Sprite MakeFlake(int size)
+        {
+            var poly = new Vector2[FlakeShape.Length];
+            for (int i = 0; i < poly.Length; i++) poly[i] = (FlakeShape[i] + new Vector2(0.5f, 0.5f)) * size;
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            var px = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            for (int x = 0; x < size; x++)
+            {
+                int hits = 0;
+                for (int sy = 0; sy < 4; sy++)
+                for (int sx = 0; sx < 4; sx++)
+                    if (Inside(poly, new Vector2(x + (sx + 0.5f) / 4f, y + (sy + 0.5f) / 4f))) hits++;
+                byte shade = (byte)(Mathf.Lerp(0.6f, 1f, (x + y) / (2f * size)) * 255); // light from the top right
+                px[y * size + x] = new Color32(shade, shade, shade, (byte)(hits * 255 / 16));
+            }
+            tex.SetPixels32(px);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
+        }
+
+        static Sprite MakeMote(int size)
+        {
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            var px = new Color32[size * size];
+            float r = size * 0.5f;
+            for (int y = 0; y < size; y++)
+            for (int x = 0; x < size; x++)
+            {
+                float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(r, r)) / r; // 0 center, 1 edge
+                float core = Mathf.Clamp01((0.32f - d) / 0.1f);
+                float halo = Mathf.Pow(Mathf.Clamp01(1f - d), 2.2f) * 0.75f;
+                px[y * size + x] = new Color32(255, 255, 255, (byte)(Mathf.Max(core, halo) * 255));
             }
             tex.SetPixels32(px);
             tex.Apply();
