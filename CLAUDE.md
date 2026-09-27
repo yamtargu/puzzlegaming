@@ -36,7 +36,9 @@ Reply to the user in casual Turkish. Prompts/code comments in English.
 - `HintSystem` — ghost line showing the next solution steps. `AutoPlayer` — demo bot that solves levels.
 
 **Board visuals**
-- `WandTrail` (drawn line + dust; the equipped wand from `CosmeticCatalog.wands` sets the dust look/motion), `NodeGlow` (Light2D per node), `DepthFeedback` + `BoardView` (2.5D shadows/tilt), `BoardFader`, `ParallaxBackground`.
+- `WandTrail` (the drawn path, styled by the equipped wand): pooled LineRenderers with the `WandLine` shader (capsule SDF: AA core, round ends, glow; modes per `WandEffect`), drag dust following `PathManager.Dragged` (visual-only event, board-local finger point, also raised by `SimulateDrag`), a reach burst per star. One dust + one burst ParticleSystem, reconfigured per wand. `Clear()` returns everything to the pool.
+- Wands: `CosmeticCatalog.Wand` (id, price, `effect`, `rarity`, `look`) + `WandLook` ScriptableObjects in `Assets/Settings/Wands/` (every line/dust/burst value; created once by Setup, never overwritten). `WandPreview` = the live uGUI preview in the shop (animates only while visible). Effects so far: Classic, Stardust (glints), Rainbow (hue along the path), Moonlight (sliding shimmer), Comet (head + tail at the finger), Gold Ink (width follows finger speed, metallic). Stable ids: `wand.stardust` = Classic (free default), `wand.twinkle` = Stardust, `wand.moonbeam` = Moonlight, `wand.comet` = Comet; `wand.ember` is still the old dust-only wand until Fire. Prices ≈ Common 120 / Rare 300 / Legendary 700.
+- `NodeGlow` (Light2D per node), `DepthFeedback` + `BoardView` (2.5D shadows/tilt), `BoardFader`, `ParallaxBackground`.
 - `GameFeedback` — sounds, haptics, small shakes.
 - `CompletionSequence` + `CompletionSettings`: level-complete "constellation fusion" (merge along the path, flare, sign rises with the level name). Events: `Arrived`, `Finished`. `WinPanel` waits for `Finished`.
 
@@ -48,7 +50,7 @@ Reply to the user in casual Turkish. Prompts/code comments in English.
 - `HomeScreen`, `LevelMap` ("Zodiac Path", virtualized), `HUD` (title cartouche, buttons, top/bottom reserve → PathManager), `ProgressDots`, `WinPanel`, `SettingsPanel`, `ShopUI`, `PremiumPanel`.
 
 **Economy / services**
-- `CoinManager` (balance, `BalanceChanged`), `CosmeticCatalog` + `Cosmetics` (line skins, backgrounds, wands = trail particle effects; looks only), `Purchases` (`PurchaseService.Current`, currently a mock store; real Unity IAP later), `Ads` (`IAdService` / `AdService.Current`, currently a mock; `RewardedAds`: free boost per ad, daily cap in TimerSettings), `AudioService` (music/SFX toggles), `AppConfig`.
+- `CoinManager` (balance, `BalanceChanged`), `CosmeticCatalog` + `Cosmetics` (line skins = colors, backgrounds, wands = line + dust effects; looks only), `Purchases` (`PurchaseService.Current`, currently a mock store; real Unity IAP later), `Ads` (`IAdService` / `AdService.Current`, currently a mock; `RewardedAds`: free boost per ad, daily cap in TimerSettings), `AudioService` (music/SFX toggles), `AppConfig`.
 
 **Editor** (`Editor/`, menu **One Line/…**)
 - `Setup Levels + Scene` (OneLineSetup, safe to re-run; `SetupTimer` wires the timer parts), `Generate 500 Levels` (LevelGenerator, deterministic; recalculates time limits after), `Validate All Levels` (LevelValidation, build fails on unsolvable levels), `Recalculate Time Limits` (TimeLimits: fills `LevelData.timeLimit`, skips manual ones, prints the table with local avg solve times + the design's expected values), `Build UI Fonts` (FontSetup: Cinzel = titles, Quicksand = body, with Turkish glyphs), `Play Plus Test Level Only`.

@@ -8,6 +8,7 @@ namespace OneLine
     /// <summary>
     /// Shop in the celestial frame (opened from the home screen and the HUD coin counter): a "Boosts" section (the two
     /// time boosts in packs of 1 and 5 — the only purchases that affect gameplay) and the cosmetics (line & stars, sky, wands).
+    /// Wand rows show a live preview (WandPreview) and their rarity; tapping one opens a big preview.
     /// It only talks to CoinManager, Boosts and Cosmetics — never to PathManager or any gameplay code. Exclusive items
     /// come with the Celestial Pass, so their button opens the pass instead of spending coins.
     /// </summary>
@@ -41,6 +42,13 @@ namespace OneLine
         }
 
         readonly List<BoostRow> boostRows = new();
+
+        // Big wand preview over the shop card.
+        GameObject wandOverlay;
+        Image wandPanelOutline;
+        WandPreview bigPreview;
+        TextMeshProUGUI bigName, bigRarity;
+        readonly Row bigRow = new();
 
         public bool IsOpen => group && group.gameObject.activeSelf;
         Color Gold => style.Gold;
@@ -79,7 +87,11 @@ namespace OneLine
             UIKit.Open(group, card, style);
         }
 
-        public void Close() => UIKit.Close(group, card, style);
+        public void Close()
+        {
+            CloseWandPreview();
+            UIKit.Close(group, card, style);
+        }
 
         void OnBalanceChanged(int balance, int delta) => Refresh();
         void OnBoostsChanged(BoostType type, int count) => Refresh();
@@ -117,6 +129,7 @@ namespace OneLine
             balanceText.SetText("{0} coins", CoinManager.GetBalance());
             foreach (var row in rows)
             {
+                if (row.item == null) continue;
                 bool owned = Cosmetics.IsOwned(row.item);
                 bool equipped = owned && IsShownAsEquipped(row.item);
                 row.label.text = equipped ? "Equipped" : owned ? "Equip" : row.item.exclusive ? "Pass" : $"{row.item.price}";
@@ -192,8 +205,10 @@ namespace OneLine
             if (timerSettings) y = BoostSection(content, y) - 20f;
             y = Section(content, "Line & stars", catalog.lineSkins, y);
             y = Section(content, "Sky", catalog.backgrounds, y - 20f);
-            y = Section(content, "Wands", catalog.wands, y - 20f);
+            y = WandSection(content, catalog.wands, y - 20f);
             content.sizeDelta = new Vector2(0f, -y);
+
+            BuildWandOverlay();
 
             messageText = UIKit.Text(card, "Message", UIKit.BodyFont(style), 30f, Gold, new Vector2(0.5f, 0f),
                 new Vector2(0f, 60f), new Vector2(800f, 50f), 3f);
@@ -228,6 +243,136 @@ namespace OneLine
                 y -= 128f;
             }
             return y;
+        }
+
+        // Wands: live preview, name, rarity, price / Equip. The row frame takes the rarity color; tapping a row opens a big preview.
+        float WandSection(Transform parent, List<CosmeticCatalog.Wand> items, float y)
+        {
+            var top = new Vector2(0.5f, 1f);
+            var left = new Vector2(0f, 0.5f);
+            var header = UIKit.Text(parent, "Wands", UIKit.BodyFont(style), 26f, UIKit.WithAlpha(style.text, style.labelAlpha), top,
+                new Vector2(-230f, y), new Vector2(380f, 44f), 12f, FontStyles.SmallCaps | FontStyles.Bold, TextAlignmentOptions.Left);
+            header.text = "Wands";
+            y -= 64f;
+            float h = style.wandRowHeight;
+            var previewSize = style.wandPreviewSize;
+            float textX = 24f + previewSize.x + 20f + 140f; // center of a 280-wide text column right of the preview
+            foreach (var item in items)
+            {
+                var wand = item;
+                var rarity = style.RarityColor(wand.rarity);
+                var rowCard = UIKit.Card(parent, wand.displayName, style, top, new Vector2(0f, y + 56f - h * 0.5f), new Vector2(820f, h));
+                var fill = rowCard.GetComponent<Image>();
+                fill.color = UIKit.WithAlpha(style.panelFill, 0.5f);
+                rowCard.Find("Outline").GetComponent<Image>().color = UIKit.WithAlpha(rarity, 0.5f);
+                AddTap(fill, () => OpenWandPreview(wand));
+
+                NewPreview(rowCard, left, new Vector2(24f + previewSize.x * 0.5f, 0f), previewSize, wand);
+                var name = UIKit.Text(rowCard, "Name", UIKit.BodyFont(style), 34f, style.text, left, new Vector2(textX, 18f),
+                    new Vector2(280f, 50f), 1f, FontStyles.Bold, TextAlignmentOptions.Left);
+                name.text = wand.displayName;
+                var tier = UIKit.Text(rowCard, "Rarity", UIKit.BodyFont(style), 22f, rarity, left, new Vector2(textX, -24f),
+                    new Vector2(280f, 34f), 6f, FontStyles.SmallCaps | FontStyles.Bold, TextAlignmentOptions.Left);
+                tier.text = RarityName(wand.rarity);
+
+                var row = new Row { item = wand };
+                var button = UIKit.PillButton(rowCard, "Action", style, "", new Vector2(1f, 0.5f), new Vector2(-115f, 0f),
+                    new Vector2(190f, 80f), () => OnRowClicked(row), out row.label);
+                row.outline = button.transform.Find("Outline").GetComponent<Image>();
+                button.GetComponent<Image>().color = UIKit.WithAlpha(style.panelFill, 0.4f);
+                row.label.fontSize = 30f;
+                rows.Add(row);
+                y -= h + 16f;
+            }
+            return y;
+        }
+
+        WandPreview NewPreview(Transform parent, Vector2 anchor, Vector2 pos, Vector2 size, CosmeticCatalog.Wand wand)
+        {
+            // A darker patch of sky behind the line, so every wand reads the way it does on the board.
+            var sky = UIKit.Image(parent, "Preview Sky", UIKit.RoundFill, style.wandPreviewSky, anchor, pos, size, true);
+            var rt = UIKit.Rect(sky.transform, "Preview", new Vector2(0.5f, 0.5f), Vector2.zero, size);
+            var preview = rt.gameObject.AddComponent<WandPreview>();
+            if (wand != null) ShowIn(preview, wand);
+            return preview;
+        }
+
+        void ShowIn(WandPreview preview, CosmeticCatalog.Wand wand)
+        {
+            var stars = style.starStyle;
+            var first = stars && stars.visitColors.Length > 0 ? stars.visitColors[0] : new Color(0.35f, 0.82f, 1f);
+            var last = stars && stars.visitColors.Length > 0 ? stars.visitColors[^1] : new Color(0.65f, 0.55f, 1f);
+            preview.Show(wand, WandLook.Of(wand), style, first, last);
+        }
+
+        static string RarityName(WandRarity rarity) => rarity switch
+        {
+            WandRarity.Legendary => "Legendary",
+            WandRarity.Rare => "Rare",
+            _ => "Common",
+        };
+
+        static void AddTap(Image target, UnityEngine.Events.UnityAction onClick)
+        {
+            target.raycastTarget = true;
+            var b = target.gameObject.AddComponent<Button>();
+            b.transition = Selectable.Transition.None;
+            b.targetGraphic = target;
+            b.onClick.AddListener(onClick);
+        }
+
+        // A big preview card over the shop: the wand drawing a few stars, its name and rarity, buy / equip. Tap outside to close.
+        void BuildWandOverlay()
+        {
+            var root = UIKit.Stretch(card, "Wand Preview");
+            wandOverlay = root.gameObject;
+            var dim = root.gameObject.AddComponent<Image>();
+            dim.sprite = UIKit.RoundFill;
+            dim.type = Image.Type.Sliced;
+            dim.color = new Color(0f, 0f, 0f, 0.6f);
+            AddTap(dim, CloseWandPreview);
+
+            var center = new Vector2(0.5f, 0.5f);
+            var big = style.wandBigPreviewSize;
+            float height = big.y + 360f;
+            var panel = UIKit.Card(root, "Panel", style, center, new Vector2(0f, 40f), new Vector2(big.x + 60f, height));
+            var panelFill = panel.GetComponent<Image>();
+            panelFill.color = UIKit.WithAlpha(style.panelFill, 1f); // opaque: in linear color even 3% lets the rows read through
+            panelFill.raycastTarget = true; // taps on the card don't close it
+            wandPanelOutline = panel.Find("Outline").GetComponent<Image>();
+            float previewY = height * 0.5f - 40f - big.y * 0.5f;
+            float nameY = previewY - big.y * 0.5f - 52f;
+            bigPreview = NewPreview(panel, center, new Vector2(0f, previewY), big, null);
+            bigName = UIKit.Text(panel, "Name", UIKit.TitleFont(style), 48f, style.text, center, new Vector2(0f, nameY),
+                new Vector2(big.x, 64f), 2f, FontStyles.Bold);
+            bigRarity = UIKit.Text(panel, "Rarity", UIKit.BodyFont(style), 26f, style.text, center, new Vector2(0f, nameY - 50f),
+                new Vector2(big.x, 40f), 8f, FontStyles.SmallCaps | FontStyles.Bold);
+            var button = UIKit.PillButton(panel, "Action", style, "", center, new Vector2(0f, nameY - 132f),
+                new Vector2(360f, 96f), () => OnRowClicked(bigRow), out bigRow.label);
+            bigRow.outline = button.transform.Find("Outline").GetComponent<Image>();
+            button.GetComponent<Image>().color = UIKit.WithAlpha(style.panelFill, 0.4f);
+            rows.Add(bigRow);
+            UIKit.CloseButton(panel, style, CloseWandPreview);
+            wandOverlay.SetActive(false);
+        }
+
+        void OpenWandPreview(CosmeticCatalog.Wand wand)
+        {
+            var rarity = style.RarityColor(wand.rarity);
+            bigRow.item = wand;
+            bigName.text = wand.displayName;
+            bigRarity.text = RarityName(wand.rarity);
+            bigRarity.color = rarity;
+            wandPanelOutline.color = UIKit.WithAlpha(rarity, 0.7f);
+            wandOverlay.SetActive(true);
+            ShowIn(bigPreview, wand);
+            messageText.text = "";
+            Refresh();
+        }
+
+        void CloseWandPreview()
+        {
+            if (wandOverlay) wandOverlay.SetActive(false);
         }
 
         // Saturn's Gift and Lunar Stillness: glyph in a small dial, what it does, how many you have, packs of 1 and 5.
@@ -290,8 +435,6 @@ namespace OneLine
             {
                 CosmeticCatalog.LineSkin s => (s.line, s.node),
                 CosmeticCatalog.Background g => (g.background, g.edge),
-                CosmeticCatalog.Wand w => (Color.Lerp(new Color(0.35f, 0.82f, 1f), w.tint, w.tintAmount),
-                                           Color.Lerp(new Color(0.65f, 0.55f, 1f), w.tint, w.tintAmount)),
                 _ => (Color.white, Color.gray),
             };
         }

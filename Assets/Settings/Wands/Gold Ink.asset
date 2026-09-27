@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82be2366686c44ed8d39f41c6dcd65b, type: 3}
+  m_Name: Gold Ink
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.WandLook
+  pathColorMix: 0
+  lineColor: {r: 1, g: 0.78, b: 0.36, a: 1}
+  glowColor: {r: 1, g: 0.68, b: 0.28, a: 1}
+  coreWidth: 0.06
+  glowWidth: 0.26
+  glowAlpha: 0.18
+  glowOpacity: 0.4
+  coreHighlight: 0.15
+  coreSoftness: 0.15
+  shimmerAmount: 0.55
+  shimmerWavelength: 2.2
+  shimmerSpeed: 0.8
+  shimmerSharpness: 14
+  metallic: 0.85
+  inkSlowSpeed: 1.5
+  inkFastSpeed: 7
+  inkThin: 0.4
+  inkThick: 1.8
+  inkSmoothing: 0.12
+  cometHeadColor: {r: 0.92, g: 0.97, b: 1, a: 1}
+  cometHeadSize: 0.3
+  cometHaloScale: 2.6
+  cometHaloAlpha: 0.35
+  cometTailTime: 0.3
+  cometTailWidth: 0.16
+  cometTailColor: {r: 0.55, g: 0.78, b: 1, a: 1}
+  cometFadeTime: 0.15
+  sparkleSpacing: 0.2
+  sparkleSize: 0.09
+  sparkleRate: 0.45
+  sparkleIntensity: 1.3
+  sparkleColor: {r: 1, g: 1, b: 1, a: 1}
+  hueCyclesPerUnit: 0.12
+  hueSpeed: 0.06
+  hueSaturation: 0.45
+  hueValue: 1
+  dustShape: 3
+  dustColors:
+  - {r: 1, g: 0.82, b: 0.4, a: 1}
+  - {r: 1, g: 0.9, b: 0.6, a: 1}
+  - {r: 0.9, g: 0.66, b: 0.28, a: 1}
+  dustLineColorMix: 0
+  dustPerUnit: 6
+  dustIdleRate: 0.4
+  dustMaxPerFrame: 4
+  dustMaxParticles: 120
+  dustSize: {x: 0.06, y: 0.11}
+  dustLifetime: {x: 1.2, y: 1.8}
+  dustScatter: 0.12
+  dustDrift: {x: 0, y: -0.05}
+  dustGravity: 0.12
+  dustTrailBack: 0
+  dustStretch: 0
+  dustTwinkle: 0
+  dustSpin: {x: 60, y: 200}
+  dustFlip: 1.6
+  dustFlutter: 0.25
+  dustFlutterFrequency: 0.9
+  burstShape: 1
+  burstCount: {x: 10, y: 14}
+  burstSpeed: 1
+  burstLifetime: 0.4
+  burstSize: {x: 0.06, y: 0.12}
+  burstColors:
+  - {r: 1, g: 0.85, b: 0.45, a: 1}
+  - {r: 1, g: 0.95, b: 0.75, a: 1}
+  burstLineColorMix: 0
+  burstFlashSize: 0
+  burstFlashColor: {r: 1, g: 1, b: 1, a: 1}
+  burstFlashTime: 0.2

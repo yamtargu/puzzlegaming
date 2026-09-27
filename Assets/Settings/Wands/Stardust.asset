@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82be2366686c44ed8d39f41c6dcd65b, type: 3}
+  m_Name: Stardust
+  m_EditorClassIdentifier: Assembly-CSharp::OneLine.WandLook
+  pathColorMix: 0.12
+  lineColor: {r: 1, g: 0.94, b: 0.78, a: 1}
+  glowColor: {r: 1, g: 0.82, b: 0.45, a: 1}
+  coreWidth: 0.05
+  glowWidth: 0.34
+  glowAlpha: 0.32
+  glowOpacity: 0.35
+  coreHighlight: 0.55
+  sparkleSpacing: 0.16
+  sparkleSize: 0.1
+  sparkleRate: 0.55
+  sparkleIntensity: 1.5
+  sparkleColor: {r: 1, g: 1, b: 1, a: 1}
+  hueCyclesPerUnit: 0.12
+  hueSpeed: 0.06
+  hueSaturation: 0.45
+  hueValue: 1
+  dustShape: 1
+  dustColors:
+  - {r: 1, g: 0.92, b: 0.65, a: 1}
+  - {r: 1, g: 1, b: 0.92, a: 1}
+  - {r: 1, g: 0.8, b: 0.45, a: 1}
+  dustLineColorMix: 0
+  dustPerUnit: 14
+  dustIdleRate: 0.8
+  dustMaxPerFrame: 6
+  dustMaxParticles: 200
+  dustSize: {x: 0.08, y: 0.15}
+  dustLifetime: {x: 0.7, y: 1.2}
+  dustScatter: 0.15
+  dustDrift: {x: 0, y: -0.12}
+  dustGravity: 0.25
+  dustTrailBack: 0
+  dustStretch: 0
+  dustTwinkle: 1
+  burstShape: 1
+  burstCount: {x: 14, y: 18}
+  burstSpeed: 1.3
+  burstLifetime: 0.45
+  burstSize: {x: 0.08, y: 0.15}
+  burstColors:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.85, b: 0.5, a: 1}
+  burstLineColorMix: 0.1

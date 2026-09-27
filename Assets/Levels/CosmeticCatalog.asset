@@ -98,3 +98,60 @@ MonoBehaviour:
     exclusive: 0
     background: {r: 0.16, g: 0.07, b: 0.05, a: 1}
     edge: {r: 0.36, g: 0.22, b: 0.18, a: 1}
+  wands:
+  - id: wand.stardust
+    displayName: Classic
+    price: 0
+    useTierColors: 0
+    exclusive: 0
+    effect: 0
+    rarity: 0
+    look: {fileID: 11400000, guid: 41d57102454134ab69bd961271300a8e, type: 2}
+  - id: wand.moonbeam
+    displayName: Moonlight
+    price: 120
+    useTierColors: 0
+    exclusive: 0
+    effect: 3
+    rarity: 0
+    look: {fileID: 11400000, guid: b86acafbe04724697946638e7cab7afc, type: 2}
+  - id: wand.twinkle
+    displayName: Stardust
+    price: 300
+    useTierColors: 0
+    exclusive: 0
+    effect: 1
+    rarity: 1
+    look: {fileID: 11400000, guid: 630b70ae9f2e74e5d8cbcefb192deeac, type: 2}
+  - id: wand.rainbow
+    displayName: Rainbow
+    price: 300
+    useTierColors: 0
+    exclusive: 0
+    effect: 2
+    rarity: 1
+    look: {fileID: 11400000, guid: a3c1fc1a7de4f47f195848d225ef2003, type: 2}
+  - id: wand.comet
+    displayName: Comet
+    price: 300
+    useTierColors: 0
+    exclusive: 0
+    effect: 4
+    rarity: 1
+    look: {fileID: 11400000, guid: 59f3f018150d643f7a1af76dc5461e1f, type: 2}
+  - id: wand.goldink
+    displayName: Gold Ink
+    price: 300
+    useTierColors: 0
+    exclusive: 0
+    effect: 5
+    rarity: 1
+    look: {fileID: 11400000, guid: 4b9565196b2cd45009b6290b0ec2f9eb, type: 2}
+  - id: wand.ember
+    displayName: Ember
+    price: 110
+    useTierColors: 0
+    exclusive: 0
+    effect: 0
+    rarity: 1
+    look: {fileID: 11400000, guid: 32e3c7a5ebbad42989d45d8236ad5c9c, type: 2}

@@ -62,6 +62,11 @@ namespace OneLine
         public event Action PathCleared;
         /// <summary>Raised on every press on the board (not on UI), real or simulated — LevelTimer starts on the first.</summary>
         public event Action BoardTouched;
+        /// <summary>
+        /// Visual only: the finger's point on the board (board-local, like Node.BoardPoint) on every frame a line is being
+        /// drawn, real or simulated (AutoPlayer). WandTrail's drag dust follows it.
+        /// </summary>
+        public event Action<Vector3> Dragged;
 
         Camera cam;
         LevelData level;
@@ -291,11 +296,13 @@ namespace OneLine
             UpdateFingerLine(screen);
             foreach (var n in nodes) n.SetFingerOver(false); // a fresh press counts as entering the star
             UpdateFingerOverStars(screen);
+            Dragged?.Invoke(BoardPointUnder(screen));
         }
 
         void OnDrag(Vector2 screen)
         {
             UpdateFingerOverStars(screen);
+            Dragged?.Invoke(BoardPointUnder(screen));
             Node current = path[^1];
             Node hit = NearestNode(screen);
 

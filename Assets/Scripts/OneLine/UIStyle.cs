@@ -188,6 +188,29 @@ namespace OneLine
         public float perkSpacing = 92f;
         public Vector2 buyButtonSize = new(560f, 128f);
 
+        [Header("Shop: wands")]
+        public Color rarityCommon = new(0.80f, 0.85f, 0.94f);
+        public Color rarityRare = new(0.48f, 0.74f, 1f);
+        public Color rarityLegendary = new(1f, 0.78f, 0.38f);
+        public float wandRowHeight = 150f;
+        [Tooltip("The patch of night sky behind a wand preview.")]
+        public Color wandPreviewSky = new(0.02f, 0.03f, 0.07f, 0.55f);
+        public Vector2 wandPreviewSize = new(250f, 120f);
+        public Vector2 wandBigPreviewSize = new(780f, 420f);
+        [Tooltip("World units shown across a preview's height (sets how big the line and dust look in it).")]
+        public float wandPreviewUnits = 1.3f;
+        [Tooltip("Preview loop: draw the line, hold, fade out, start over (seconds).")]
+        public float wandPreviewDrawTime = 1.8f;
+        public float wandPreviewHold = 0.8f;
+        public float wandPreviewFade = 0.4f;
+
+        public Color RarityColor(WandRarity rarity) => rarity switch
+        {
+            WandRarity.Legendary => rarityLegendary,
+            WandRarity.Rare => rarityRare,
+            _ => rarityCommon,
+        };
+
         [Header("Celestial switch")]
         public Vector2 switchSize = new(132f, 68f);
         public float switchKnobInset = 7f;
